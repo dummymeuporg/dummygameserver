@@ -1,0 +1,3 @@
+[submodule "vendor/libdummy"]
+	path = vendor/libdummy
+	url = git@github.com:dummymeuporg/libdummy.git
