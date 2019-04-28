@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(dummygameserver)
-include_directories(include)
-
+include_directories(include vendor/libdummy/include)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
-    -lboost_filesystem -lboost_system -lboost_log -lpthread")
+	-L${CMAKE_CURRENT_SOURCE_DIR}/vendor/libdummy/build \
+	-lboost_filesystem -lboost_system -lboost_log -lpthread -lssl -lcrypto")
 
 add_executable(dummygameserver
     src/main.cpp
+    src/master_client.cpp
 )
+
+target_link_libraries(dummygameserver dummy)

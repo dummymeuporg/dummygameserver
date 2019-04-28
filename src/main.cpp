@@ -5,9 +5,9 @@
 
 int main(int argc, char* argv[])
 {
-    if (argc < 3) {
+    if (argc < 4) {
         std::cerr << "Usage: " << argv[0] << " PROJECT_DIR ACCOUNTS_DIR "
-            << std::endl;
+            "CONF_DIR" << std::endl;
         exit(EXIT_FAILURE);
     }
 
