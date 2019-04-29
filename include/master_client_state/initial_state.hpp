@@ -1,5 +1,7 @@
 #pragma once
 
+#include "master_client_state/master_client_state.hpp"
+
 namespace MasterClientState
 {
 
