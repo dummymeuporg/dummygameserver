@@ -8,6 +8,8 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
 add_executable(dummygameserver
     src/main.cpp
     src/master_client.cpp
+    src/master_client_state/initial_state.cpp
+    src/master_client_state/master_client_state.cpp
 )
 
 target_link_libraries(dummygameserver dummy)

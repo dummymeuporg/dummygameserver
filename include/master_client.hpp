@@ -8,6 +8,7 @@
 #include <openssl/pem.h>
 
 #include "crypto/rsa_keypair.hpp"
+#include "master_client_state/master_client_state.hpp"
 
 using boost::asio::ip::tcp;
 namespace fs = boost::filesystem;
@@ -15,15 +16,22 @@ namespace fs = boost::filesystem;
 
 class MasterClient {
 public:
-    MasterClient(boost::asio::io_service&, fs::path, fs::path, fs::path);
+    MasterClient(boost::asio::io_service&,
+                 const tcp::resolver::results_type& endpoints,
+                 fs::path, fs::path, fs::path,
+                 const char*);
+    void changeState(MasterClientState::MasterClientState* state);
 
 private:
 
-    void _loadRSAKeyPair();
+    void _doConnect(const tcp::resolver::results_type& endpoints);
+    void next();
 
     boost::asio::io_service& m_ioService;
     tcp::socket m_socket;
     fs::path m_projectDir, m_accountsDir, m_configDir;
+    std::string m_serverName;
     EVP_PKEY* m_masterPublicKey;
     Dummy::Crypto::RSAKeyPair m_rsaKeyPair;
+    std::unique_ptr<MasterClientState::MasterClientState> m_state;
 };
