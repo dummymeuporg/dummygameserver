@@ -27,6 +27,18 @@ public:
     void changeState(MasterClientState::MasterClientState* state);
     void next();
 
+    ::EVP_PKEY const* masterPublicKey() const {
+        return m_masterPublicKey;
+    }
+
+    Dummy::Crypto::RSAKeyPair& rsaKeyPair() {
+        return m_rsaKeyPair;
+    }
+
+    const fs::path& configDir() const {
+        return m_configDir;
+    }
+
 private:
 
     void _doConnect(const tcp::resolver::results_type& endpoints);
