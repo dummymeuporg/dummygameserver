@@ -34,13 +34,10 @@ void MasterClient::_doConnect(const tcp::resolver::results_type& endpoints)
     boost::asio::async_connect(m_socket, endpoints,
         [this](boost::system::error_code ec, tcp::endpoint)
         {
-            BOOST_LOG_TRIVIAL(debug) << "Error code: " << ec.value();
             if (!ec) {
                 // TODO: communicate with the master server.
                 _sendPreambleHeader();
-            } else {
-                BOOST_LOG_TRIVIAL(debug) << "Could not connect to server.";
-            }
+            } 
         }
     );
 }
@@ -49,13 +46,11 @@ void MasterClient::_sendPreambleHeader() {
     std::uint16_t serverNameSize = static_cast<std::uint16_t>(
         m_serverName.size()
     );
-    BOOST_LOG_TRIVIAL(debug) << "Server name size is: " << serverNameSize;
 
     boost::asio::async_write(m_socket, boost::asio::buffer(
         reinterpret_cast<const char*>(&serverNameSize), sizeof(std::uint16_t)),
         [this](boost::system::error_code ec, std::size_t /*length*/)
         {
-            BOOST_LOG_TRIVIAL(debug) << "Wrote preamble header.";
             _sendPreambleContent();
         }
     );
@@ -66,7 +61,6 @@ void MasterClient::_sendPreambleContent() {
         m_serverName, m_serverName.size()),
         [this](boost::system::error_code ec, std::size_t /*length*/)
         {
-            BOOST_LOG_TRIVIAL(debug) << "Wrote preamble content.";
             next();
         }
     );
@@ -106,11 +100,8 @@ void MasterClient::_doReadHeader()
         boost::asio::buffer(&m_header, sizeof(std::uint16_t)),
         [this](boost::system::error_code ec, std::size_t length)
         {
-            BOOST_LOG_TRIVIAL(debug) << "Read " << length << " bytes.";
             if (!ec)
             {
-                BOOST_LOG_TRIVIAL(debug) << "Will read "
-                                         << m_header << " more bytes.";
                 m_payload.resize(m_header);
                 _doReadContent();
             }
@@ -128,7 +119,6 @@ void MasterClient::_doReadContent()
         {
             if (!ec)
             {
-                BOOST_LOG_TRIVIAL(debug) << "Read " << lenght << " bytes.";
                 m_state->onRead(m_payload);
             }
         }

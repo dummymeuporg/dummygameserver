@@ -20,9 +20,7 @@ void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
     // being recognized by the master server, false otherwise.
     // After that, we shall send the encrypted master key.
     if (buffer[0]) {
-        BOOST_LOG_TRIVIAL(debug) << "Server recognized. Send master key.";
     } else {
-        BOOST_LOG_TRIVIAL(debug) << "Server not recognized...";
     }
     m_masterClient.next();
 }
