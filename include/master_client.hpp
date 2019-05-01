@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstdint>
+#include <vector>
+
 #include <boost/asio.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/filesystem.hpp>
@@ -22,6 +25,7 @@ public:
                  const char*);
     ~MasterClient();
     void changeState(MasterClientState::MasterClientState* state);
+    void next();
 
 private:
 
@@ -30,7 +34,8 @@ private:
     void _encryptMasterKey();
     void _sendPreambleHeader();
     void _sendPreambleContent();
-    void next();
+    void _doReadHeader();
+    void _doReadContent();
 
     boost::asio::io_service& m_ioService;
     tcp::socket m_socket;
@@ -39,4 +44,6 @@ private:
     EVP_PKEY* m_masterPublicKey;
     Dummy::Crypto::RSAKeyPair m_rsaKeyPair;
     std::unique_ptr<MasterClientState::MasterClientState> m_state;
+    std::uint16_t m_header;
+    std::vector<std::uint8_t> m_payload;
 };

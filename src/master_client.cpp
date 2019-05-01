@@ -2,6 +2,8 @@
 
 #include <boost/log/trivial.hpp>
 
+#include "master_client_state/initial_state.hpp"
+
 #include "master_client.hpp"
 
 namespace fs = boost::filesystem;
@@ -16,7 +18,7 @@ MasterClient::MasterClient(boost::asio::io_service& ioService,
     m_masterPublicKey(nullptr),
     m_rsaKeyPair(fs::path(m_configDir / ".conf" / "pub.pem").string(),
                  fs::path(m_configDir / ".conf" / "priv.pem").string()),
-    m_state(nullptr)
+    m_state(new MasterClientState::InitialState(*this))
 {
     _loadMasterKey();
     _doConnect(endpoints);
@@ -54,8 +56,21 @@ void MasterClient::_sendPreambleHeader() {
         [this](boost::system::error_code ec, std::size_t /*length*/)
         {
             BOOST_LOG_TRIVIAL(debug) << "Wrote preamble header.";
+            _sendPreambleContent();
         }
     );
+}
+
+void MasterClient::_sendPreambleContent() {
+    boost::asio::async_write(m_socket, boost::asio::buffer(
+        m_serverName, m_serverName.size()),
+        [this](boost::system::error_code ec, std::size_t /*length*/)
+        {
+            BOOST_LOG_TRIVIAL(debug) << "Wrote preamble content.";
+            next();
+        }
+    );
+
 }
 
 void MasterClient::_loadMasterKey() {
@@ -80,8 +95,46 @@ void MasterClient::_encryptMasterKey() {
 }
 
 void MasterClient::next() {
+    _doReadHeader();
 
 }
+
+void MasterClient::_doReadHeader()
+{
+    boost::asio::async_read(
+        m_socket,
+        boost::asio::buffer(&m_header, sizeof(std::uint16_t)),
+        [this](boost::system::error_code ec, std::size_t length)
+        {
+            BOOST_LOG_TRIVIAL(debug) << "Read " << length << " bytes.";
+            if (!ec)
+            {
+                BOOST_LOG_TRIVIAL(debug) << "Will read "
+                                         << m_header << " more bytes.";
+                m_payload.resize(m_header);
+                _doReadContent();
+            }
+
+        }
+    );
+}
+
+void MasterClient::_doReadContent()
+{
+    boost::asio::async_read(
+        m_socket,
+        boost::asio::buffer(m_payload, m_header),
+        [this](boost::system::error_code ec, std::size_t lenght)
+        {
+            if (!ec)
+            {
+                BOOST_LOG_TRIVIAL(debug) << "Read " << lenght << " bytes.";
+                m_state->onRead(m_payload);
+            }
+        }
+    );
+}
+
 
 void MasterClient::changeState(MasterClientState::MasterClientState* state) {
     m_state.reset(state);
