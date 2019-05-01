@@ -20,11 +20,16 @@ public:
                  const tcp::resolver::results_type& endpoints,
                  fs::path, fs::path, fs::path,
                  const char*);
+    ~MasterClient();
     void changeState(MasterClientState::MasterClientState* state);
 
 private:
 
     void _doConnect(const tcp::resolver::results_type& endpoints);
+    void _loadMasterKey();
+    void _encryptMasterKey();
+    void _sendPreambleHeader();
+    void _sendPreambleContent();
     void next();
 
     boost::asio::io_service& m_ioService;

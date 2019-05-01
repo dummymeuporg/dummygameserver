@@ -1,10 +1,13 @@
 #include <cstdlib>
 #include <iostream>
+#include <thread>
 
 #include <boost/asio.hpp>
 
 #include "crypto/rsa_keypair.hpp"
 #include "master_client.hpp"
+
+using boost::asio::ip::tcp;
 
 int main(int argc, char* argv[])
 {
@@ -14,27 +17,28 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    boost::asio::io_service ioservice;
-    tcp::resolver resolver(ioservice);
-    auto endpoints = resolver.resolve("127.0.0.1", "33337");
-
     try {
+        
+        boost::asio::io_service io_service;
+        tcp::resolver resolver(io_service);
+        auto endpoints = resolver.resolve("127.0.0.1", "33338");
+
         MasterClient masterClient(
-            ioservice,
+            io_service,
             endpoints,
             fs::path(argv[1]),
             fs::path(argv[2]),
             fs::path(argv[3]),
             argv[4]
         );
+
+        io_service.run();
+
     } catch(const Dummy::Crypto::RSAKeyPairException& e) {
         std::cerr << "Could not run the master client: " 
             << e.what() << std::endl;
         exit(EXIT_FAILURE);
     }
-    //GameServer gameServer(ioservice, 4648, argv[1]);
-    //
-    ioservice.run();
 
     return EXIT_SUCCESS;
 }
