@@ -10,8 +10,4 @@ MasterClientState::MasterClientState(::MasterClient& masterClient)
 {
 }
 
-void MasterClientState::onRead(const std::vector<std::uint8_t>& buffer) {
-
-}
-
 } // namespace MasterClientState
