@@ -1,8 +1,18 @@
 #pragma once
 
+#include <map>
+#include <memory>
+
 #include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
 
+#include "core/account.hpp"
+#include "core/project.hpp"
+
+namespace fs = boost::filesystem;
 using boost::asio::ip::tcp;
 
 class AbstractGameServer {
@@ -10,11 +20,13 @@ public:
     AbstractGameServer(boost::asio::io_service&,
                        unsigned short port,
                        const fs::path& projectPath,
-                       const fs::path& accountsPath);
+                       const fs::path& serverPath);
 
 protected:
     boost::asio::ip::tcp::acceptor m_acceptor;
-    fs::path m_accountsPath;
-    fs::path m_projectPath;
+    Dummy::Core::Project m_project;
+    fs::path m_serverPath;
+    std::map<boost::uuids::uuid,
+             std::shared_ptr<Dummy::Core::Account>> m_pendingAccounts;
 
 };
