@@ -9,13 +9,14 @@ TestGameServer::TestGameServer(
 ) : AbstractGameServer(ioService, port, projectPath, serverPath)
 {
     // Instantiate a Test account. Put it in the pending accounts.
+	_instantiateTestAccount();
 }
 
 void TestGameServer::_instantiateTestAccount()
 {
     std::string testAccountName("TEST.0000");
     fs::path accountPath(
-        m_project.projectPath() / "accounts" / testAccountName
+        m_serverPath / "accounts" / testAccountName
     );
     if (!fs::exists(accountPath)) {
         std::cerr << "Test account directory does not exist. Create it."

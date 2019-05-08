@@ -12,9 +12,9 @@ using boost::asio::ip::tcp;
 
 int main(int argc, char* argv[])
 {
-    if (argc < 5) {
-        std::cerr << "Usage: " << argv[0] << " PROJECT_DIR ACCOUNTS_DIR "
-            "CONF_DIR SERVER_NAME" << std::endl;
+    if (argc < 3) {
+        std::cerr << "Usage: " << argv[0] << " PROJECT_DIR SERVER_DIR"
+            << std::endl;
         exit(EXIT_FAILURE);
     }
 
