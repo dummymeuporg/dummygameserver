@@ -9,6 +9,7 @@ add_executable(dummygameserver
     src/main.cpp
     src/master_client.cpp
     src/abstract_game_server.cpp
+    src/game_session.cpp
     src/test_game_server.cpp
 	src/game_session_state/game_session_state.cpp
 	src/game_session_state/initial_state.cpp

@@ -10,10 +10,12 @@ namespace GameSessionState {
 InitialState::InitialState(std::shared_ptr<GameSession> gameSession)
     : GameSessionState(gameSession)
 {
+    std::cerr << "Initial state instantiated." << std::endl;
 }
 
 
 void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
+    std::cerr << "Received " << buffer.size() << " bytes." << std::endl;
     // The buffer should contain an account name and an uuid.
     if (buffer.size() < 16 + 2)
     {

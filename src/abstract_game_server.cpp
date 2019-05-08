@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "abstract_game_server.hpp"
+#include "game_session.hpp"
 
 AbstractGameServer::AbstractGameServer(
     boost::asio::io_service& ioService,
@@ -24,10 +25,10 @@ void AbstractGameServer::_doAccept()
                boost::asio::ip::tcp::socket socket)
         {
         	if (!ec) {
-				/*
-            	std::make_shared<PlayerSession>(std::move(socket),
-                                                *this)->start();
-				*/
+				
+            	std::make_shared<GameSession>(std::move(socket),
+                                              *this)->start();
+				
 				std::cerr << "Start a new session." << std::endl;
             }
             _doAccept();

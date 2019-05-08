@@ -1,11 +1,13 @@
+#include <iostream>
+
 #include <boost/asio.hpp>
 
-#include "game_server.hpp"
-
+#include "game_session_state/initial_state.hpp"
+#include "abstract_game_server.hpp"
 #include "game_session.hpp"
 
 GameSession::GameSession(boost::asio::ip::tcp::socket s,
-                         GameServer& gameServer)
+                         AbstractGameServer& gameServer)
     : m_socket(std::move(s)),
       m_gameServer(gameServer),
       m_state(nullptr)
@@ -15,7 +17,7 @@ GameSession::GameSession(boost::asio::ip::tcp::socket s,
 
 void GameSession::start()
 {
-	m_state = std::make_shared<GameSessionState::ItinialState>(
+	m_state = std::make_shared<GameSessionState::InitialState>(
 		shared_from_this()
 	);
     _doReadHeader();
@@ -57,6 +59,9 @@ void GameSession::_doReadContent() {
 	);
 }
 
-void GameSession::changeState(GameSessionState::GameSessionState* state) {
-    m_state.reset(state);
+void GameSession::changeState(
+    std::shared_ptr<GameSessionState::GameSessionState> state
+)
+{
+    m_state = state;
 }
