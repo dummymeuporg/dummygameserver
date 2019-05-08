@@ -4,13 +4,15 @@
 
 #include "game_session_state/initial_state.hpp"
 #include "abstract_game_server.hpp"
+#include "abstract_game_server.hpp"
 #include "game_session.hpp"
 
 GameSession::GameSession(boost::asio::ip::tcp::socket s,
                          AbstractGameServer& gameServer)
     : m_socket(std::move(s)),
       m_gameServer(gameServer),
-      m_state(nullptr)
+      m_state(nullptr),
+      m_account(nullptr)      
 {
 
 }
@@ -64,4 +66,9 @@ void GameSession::changeState(
 )
 {
     m_state = state;
+    m_state->resume();
+}
+
+void GameSession::setAccount(std::shared_ptr<Dummy::Core::Account> account) {
+    
 }

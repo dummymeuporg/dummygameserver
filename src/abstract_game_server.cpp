@@ -54,6 +54,7 @@ void AbstractGameServer::connect(
     m_connectedAccounts[accountName] = account;
 }
 
-bool AbstractGameServer::isAuthenticated(const std::string& accountName) {
+bool
+AbstractGameServer::isAuthenticated(const std::string& accountName) const {
     return m_connectedAccounts.find(accountName) != m_connectedAccounts.end();
 }

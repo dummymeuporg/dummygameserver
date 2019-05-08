@@ -21,10 +21,16 @@ public:
                        unsigned short port,
                        const fs::path& projectPath,
                        const fs::path& serverPath);
-    virtual void run() = 0;
+
+    const fs::path& serverPath() const {
+        return m_serverPath;
+    }
+
     void connect(const boost::uuids::uuid& sessionID,
                  const std::string&);
     bool isAuthenticated(const std::string&) const;
+
+    virtual void run() = 0;
 
 protected:
     void _doAccept();

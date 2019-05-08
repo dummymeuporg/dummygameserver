@@ -26,7 +26,13 @@ public:
         return m_socket;
     }
 
+    std::shared_ptr<Dummy::Core::Account> account() const {
+        return m_account;
+    }
+
     void changeState(std::shared_ptr<GameSessionState::GameSessionState>);
+
+    void setAccount(std::shared_ptr<Dummy::Core::Account>);
 
 private:
     boost::asio::ip::tcp::socket m_socket;
