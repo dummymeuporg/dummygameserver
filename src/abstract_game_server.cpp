@@ -53,3 +53,7 @@ void AbstractGameServer::connect(
         m_pendingAccounts[sessionID];
     m_connectedAccounts[accountName] = account;
 }
+
+bool AbstractGameServer::isAuthenticated(const std::string& accountName) {
+    return m_connectedAccounts.find(accountName) != m_connectedAccounts.end();
+}

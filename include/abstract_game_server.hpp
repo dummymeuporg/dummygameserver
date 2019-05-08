@@ -24,6 +24,7 @@ public:
     virtual void run() = 0;
     void connect(const boost::uuids::uuid& sessionID,
                  const std::string&);
+    bool isAuthenticated(const std::string&) const;
 
 protected:
     void _doAccept();

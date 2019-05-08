@@ -43,6 +43,23 @@ void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
 
     std::cerr << "Account is: " << accountName << std::endl;
     std::cerr << "Session id is: " << sessionID << std::endl;
+
+    // Check if the account is not connected yet.
+    AbstractGameServer& srv(m_gameSession.gameServer());
+
+    if(srv.isAuthenticated(accountName)) {
+        // TODO: send an error.
+        std::cerr << "Error. " << accountName << " already logged in."
+            << std::endl;
+        return;
+    }
+
+    // try to connect the account through the session ID.
+    std::cerr << "Connect to the server. " << std::endl;
+    srv.connect(sessionID, accountName);
+
+    // Send a positive answer.
+    // Send the list of characters maybe.
 }
 
 } // namespace GameSessionState
