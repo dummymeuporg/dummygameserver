@@ -9,9 +9,4 @@ GameSessionState::GameSessionState(std::shared_ptr<GameSession> gameSession)
 {
 }
 
-void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
-    
-}
-
-
 } // namespace GameSessionState

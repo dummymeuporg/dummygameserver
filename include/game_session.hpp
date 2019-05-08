@@ -6,6 +6,7 @@
 
 #include <boost/asio.hpp>
 
+#include "core/account.hpp"
 #include "game_session_state/game_session_state.hpp"
 
 class GameServer;

@@ -26,8 +26,8 @@ void TestGameServer::_instantiateTestAccount()
     Dummy::Core::Account account(testAccountName,
                                  boost::uuids::random_generator()());
 
-    std::cout << "Connect to the server using " << account.sessionUUID()
-        << std::endl;
+    std::cerr << "Connect to the server using " << testAccountName
+        << " and " << account.sessionUUID() << std::endl;
     m_pendingAccounts[account.sessionUUID()] =
         std::make_shared<Dummy::Core::Account>(account);
 }
