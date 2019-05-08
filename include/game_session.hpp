@@ -36,4 +36,5 @@ private:
     std::uint16_t m_header;
     std::vector<uint8_t> m_payload;
     std::shared_ptr<GameSessionState::GameSessionState*> m_state;
+    std::shared_ptr<Dummy::Core::Account> m_account;
 };

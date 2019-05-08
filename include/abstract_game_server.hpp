@@ -21,12 +21,19 @@ public:
                        unsigned short port,
                        const fs::path& projectPath,
                        const fs::path& serverPath);
+    virtual void run() = 0;
+    void connect(const boost::uuids::uuid& sessionID,
+                 const std::string&);
 
 protected:
+    void _doAccept();
+
     boost::asio::ip::tcp::acceptor m_acceptor;
     Dummy::Core::Project m_project;
     fs::path m_serverPath;
     std::map<boost::uuids::uuid,
              std::shared_ptr<Dummy::Core::Account>> m_pendingAccounts;
+    std::map<std::string,
+             std::shared_ptr<Dummy::Core::Account>> m_connectedAccounts;
 
 };

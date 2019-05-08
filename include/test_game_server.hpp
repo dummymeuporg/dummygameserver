@@ -15,6 +15,7 @@ public:
                    unsigned short port,
                    const fs::path& projectPath,
                    const fs::path& serverPath);
+    virtual void run() override;
 private:
     void _instantiateTestAccount();
 };

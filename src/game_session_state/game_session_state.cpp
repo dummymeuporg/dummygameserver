@@ -4,9 +4,13 @@
 
 namespace GameSessionState {
 
-GameSessionState::GameSessionState(::GameSession& gameSession)
+GameSessionState::GameSessionState(std::shared_ptr<GameSession> gameSession)
     : m_gameSession(gameSession)
 {
+}
+
+void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
+    
 }
 
 

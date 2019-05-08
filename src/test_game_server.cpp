@@ -9,7 +9,6 @@ TestGameServer::TestGameServer(
 ) : AbstractGameServer(ioService, port, projectPath, serverPath)
 {
     // Instantiate a Test account. Put it in the pending accounts.
-	_instantiateTestAccount();
 }
 
 void TestGameServer::_instantiateTestAccount()
@@ -29,4 +28,11 @@ void TestGameServer::_instantiateTestAccount()
 
     std::cout << "Connect to the server using " << account.sessionUUID()
         << std::endl;
+    m_pendingAccounts[account.sessionUUID()] =
+        std::make_shared<Dummy::Core::Account>(account);
+}
+
+void TestGameServer::run() {
+    _instantiateTestAccount();
+    _doAccept();
 }

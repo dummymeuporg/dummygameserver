@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
                           6612,
                           fs::path(argv[1]),
                           fs::path(argv[2]));
-
+    server.run();
     io_service.run();
 
 
