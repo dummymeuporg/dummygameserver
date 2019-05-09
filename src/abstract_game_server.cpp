@@ -58,3 +58,8 @@ bool
 AbstractGameServer::isAuthenticated(const std::string& accountName) const {
     return m_connectedAccounts.find(accountName) != m_connectedAccounts.end();
 }
+
+bool
+AbstractGameServer::isPending(const boost::uuids::uuid& id) const {
+    return m_pendingAccounts.find(id) != m_pendingAccounts.end();
+}

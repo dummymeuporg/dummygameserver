@@ -70,5 +70,5 @@ void GameSession::changeState(
 }
 
 void GameSession::setAccount(std::shared_ptr<Dummy::Core::Account> account) {
-    
+   m_account = account; 
 }

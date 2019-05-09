@@ -28,6 +28,7 @@ public:
 
     void connect(const boost::uuids::uuid& sessionID,
                  const std::string&);
+    bool isPending(const boost::uuids::uuid&) const;
     bool isAuthenticated(const std::string&) const;
 
     virtual void run() = 0;

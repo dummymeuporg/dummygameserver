@@ -1,3 +1,4 @@
+#include <iostream>
 #include "abstract_game_server.hpp"
 
 #include "game_session.hpp"

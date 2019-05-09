@@ -58,6 +58,15 @@ void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
         return;
     }
 
+    // Check that the UUID is into the pending accounts.
+    if(!srv.isPending(sessionID)) {
+        // TODO: send an error.
+        std::cerr << "Error. " << sessionID << " is not pending."
+            << std::endl;
+        return;
+    }
+    
+
     // try to connect the account through the session ID.
     std::cerr << "Connect to the server. " << std::endl;
     srv.connect(sessionID, accountName);
@@ -68,13 +77,14 @@ void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
     m_gameSession->setAccount(account);
     // Send a positive answer.
     // Send the list of characters maybe.
+    _answer(1);
 }
 
 void InitialState::_answer(std::uint8_t answer) {
     auto self(m_gameSession->shared_from_this());
     auto selfState(shared_from_this());
     std::array<std::uint8_t, 3> buffer;
-    *(reinterpret_cast<std::uint16_t*>(buffer.data())) = sizeof(std::uint16_t);
+    *(reinterpret_cast<std::uint16_t*>(buffer.data())) = sizeof(std::uint8_t);
     buffer[2] = answer;
 
     boost::asio::async_write(
