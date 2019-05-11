@@ -9,6 +9,8 @@ public:
     SendCharactersState(std::shared_ptr<GameSession>);
     virtual void resume() override;
     virtual void onRead(const std::vector<std::uint8_t>&) override;
+private:
+    void _answer(const std::vector<std::uint8_t>&);
 };
 
 } // namespace GameSessionState
