@@ -1,4 +1,5 @@
 #include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_generators.hpp>
 #include "test_game_server.hpp"
 
 TestGameServer::TestGameServer(
@@ -23,8 +24,11 @@ void TestGameServer::_instantiateTestAccount()
         fs::create_directory(accountPath);
     }
 
-    Dummy::Core::Account account(testAccountName,
-                                 boost::uuids::random_generator()());
+    boost::uuids::string_generator gen;
+    Dummy::Core::Account account(
+        testAccountName,
+        gen("00000000-0000-0000-0000-000000000000")
+    );
 
     std::cerr << "Connect to the server using " << testAccountName
         << " and " << account.sessionUUID() << std::endl;
