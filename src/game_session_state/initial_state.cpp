@@ -1,3 +1,4 @@
+#include <array>
 #include <iostream>
 #include <boost/uuid/uuid_io.hpp>
 
@@ -5,6 +6,8 @@
 #include "game_session.hpp"
 #include "game_session_state/initial_state.hpp"
 #include "game_session_state/send_characters_state.hpp"
+
+#include "protocol/outgoing_packet.hpp"
 
 namespace GameSessionState {
 
@@ -18,32 +21,14 @@ void InitialState::resume() {
     // Nothing to do.
 }
 
-void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
-    std::cerr << "Received " << buffer.size() << " bytes." << std::endl;
-    // The buffer should contain an account name and an uuid.
-    if (buffer.size() < 16 + 2)
-    {
-        // Throw an exception?
-        return;
-    }
-    const std::uint16_t* accountLength =
-        reinterpret_cast<const std::uint16_t*>(buffer.data());
-
-    // Check against the accountLength
-    if (*accountLength > buffer.size() - (16 + 2)) {
-        // Throm an exception?
-        return;
-    }
-
-    std::string accountName(
-        reinterpret_cast<const char*>(buffer.data()) + sizeof(std::uint16_t),
-                            *accountLength);
+void InitialState::onRead(Dummy::Protocol::IncomingPacket& pkt)
+{
+    std::string accountName;
+    std::array<std::uint8_t, 16> uuid_data;
     boost::uuids::uuid sessionID;
-    std::copy(
-        buffer.begin() + sizeof(std::uint16_t) + *accountLength,
-        buffer.end(),
-        sessionID.data
-    );
+
+    pkt >> accountName >> uuid_data;
+    std::copy(uuid_data.begin(), uuid_data.end(), sessionID.data);
 
     std::cerr << "Account is: " << accountName << std::endl;
     std::cerr << "Session id is: " << sessionID << std::endl;
@@ -78,18 +63,18 @@ void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
     // Send a positive answer.
     // Send the list of characters maybe.
     _answer(1);
+
+
 }
 
 void InitialState::_answer(std::uint8_t answer) {
     auto self(m_gameSession->shared_from_this());
     auto selfState(shared_from_this());
-    std::array<std::uint8_t, 3> buffer;
-    *(reinterpret_cast<std::uint16_t*>(buffer.data())) = sizeof(std::uint8_t);
-    buffer[2] = answer;
-
+    Dummy::Protocol::OutgoingPacket pkt;
+    pkt << answer;
     boost::asio::async_write(
         m_gameSession->socket(),
-        boost::asio::buffer(buffer, buffer.size()),
+        boost::asio::buffer(pkt.buffer(), pkt.size()),
         [this, self, selfState, answer](boost::system::error_code ec,
                                         std::size_t length)
         {
