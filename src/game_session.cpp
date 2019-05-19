@@ -56,7 +56,7 @@ void GameSession::_doReadContent() {
             {
                 std::cerr << "Read " << length << " bytes.";
                 Dummy::Protocol::IncomingPacket pkt(m_payload);
-                m_state->onRead(m_payload);
+                m_state->onRead(pkt);
             }
         }
 	);

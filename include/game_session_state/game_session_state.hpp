@@ -17,7 +17,7 @@ public:
     GameSessionState(std::shared_ptr<GameSession>);
     virtual void resume() = 0;
     //virtual void onRead(const std::vector<std::uint8_t>&) = 0;
-    virtual void onRead(const Dummy::Protocol::IncomingPacket&) = 0;
+    virtual void onRead(Dummy::Protocol::IncomingPacket&) = 0;
 protected:
     std::shared_ptr<GameSession> m_gameSession;
 };

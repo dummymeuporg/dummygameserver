@@ -9,6 +9,8 @@
 #include "game_session.hpp"
 #include "game_session_state/send_characters_state.hpp"
 
+#include "protocol/outgoing_packet.hpp"
+
 namespace GameSessionState {
 
 SendCharactersState::SendCharactersState(
@@ -23,7 +25,9 @@ void SendCharactersState::resume() {
     fs::path accountPath(svr.serverPath() /
                          "accounts" / m_gameSession->account()->name());
     std::vector<std::shared_ptr<Dummy::Core::Character>> characters;
-    std::vector<std::uint8_t> buffer(sizeof(std::uint16_t) * 2);
+
+    Dummy::Protocol::OutgoingPacket pkt;
+
     std::uint16_t charactersCount = 0;
     for (const auto& entry: boost::make_iterator_range(
                 fs::directory_iterator(accountPath))) {
@@ -34,18 +38,16 @@ void SendCharactersState::resume() {
     std::cerr << "There are " << characters.size() << " characters."
         << std::endl;
 
-    *(reinterpret_cast<std::uint16_t*>(buffer.data())) =
-        buffer.size() - sizeof(std::uint16_t);
-    *(reinterpret_cast<std::uint16_t*>(buffer.data()) + 1) = charactersCount;
-    _answer(buffer);
+    pkt << charactersCount;
+    _answer(pkt);
 }
 
-void SendCharactersState::_answer(const std::vector<std::uint8_t>& buffer) {
+void SendCharactersState::_answer(const Dummy::Protocol::OutgoingPacket& pkt) {
     auto self(m_gameSession->shared_from_this());
     auto selfState(shared_from_this());
     boost::asio::async_write(
         m_gameSession->socket(),
-        boost::asio::buffer(buffer, buffer.size()),
+        boost::asio::buffer(pkt.buffer(), pkt.size()),
         [self, selfState, this](boost::system::error_code ec,
                                 std::size_t length)
         {
@@ -57,7 +59,7 @@ void SendCharactersState::_answer(const std::vector<std::uint8_t>& buffer) {
     );
 }
 
-void SendCharactersState::onRead(const std::vector<std::uint8_t>& buffer) {
+void SendCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     // From here, the player has either created a character or selected one.
 }
 
