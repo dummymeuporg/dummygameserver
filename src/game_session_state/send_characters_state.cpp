@@ -53,7 +53,7 @@ void SendCharactersState::_answer(const Dummy::Protocol::OutgoingPacket& pkt) {
         {
             if (!ec)
             {
-                // wait on the onRead function?
+                m_gameSession->next();
             }
         }
     );
@@ -61,6 +61,13 @@ void SendCharactersState::_answer(const Dummy::Protocol::OutgoingPacket& pkt) {
 
 void SendCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     // From here, the player has either created a character or selected one.
+    std::uint8_t command;
+    pkt >> command;
+
+    std::cerr << "command: " << command << std::endl;
+    if (command == 1) {
+        std::cerr << "Create character." << std::endl;
+    }
 }
 
 } // namespace GameSessionState
