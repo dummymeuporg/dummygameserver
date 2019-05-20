@@ -63,3 +63,11 @@ bool
 AbstractGameServer::isPending(const boost::uuids::uuid& id) const {
     return m_pendingAccounts.find(id) != m_pendingAccounts.end();
 }
+
+
+bool
+AbstractGameServer::characterExists(const std::string& characterName) const {
+    // get canonical name, check if file exists.
+    // that’s it.
+    return false;
+}
