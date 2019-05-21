@@ -10,6 +10,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 
 #include "core/account.hpp"
+#include "core/character.hpp"
 #include "core/project.hpp"
 
 namespace fs = boost::filesystem;
@@ -30,7 +31,19 @@ public:
                  const std::string&);
     bool isPending(const boost::uuids::uuid&) const;
     bool isAuthenticated(const std::string&) const;
-    bool characterExists(const std::string&) const;
+
+    /* Character creation. */
+    bool characterExists(const Dummy::Core::Character&) const;
+    bool skinExists(const std::string&) const;
+
+    Dummy::Core::Character createCharacter(const Dummy::Core::Account&,
+                                           const std::string& characterName,
+                                           const std::string& skin) const;
+
+    void saveCharacter(
+        const Dummy::Core::Account&,
+        const Dummy::Core::Character&
+    ) const;
 
     virtual void run() = 0;
 

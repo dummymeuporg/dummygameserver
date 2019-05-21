@@ -67,6 +67,11 @@ void SendCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     std::cerr << "command: " << command << std::endl;
     if (command == 1) {
         std::cerr << "Create character." << std::endl;
+        std::string characterName;
+        std::string skin;
+        pkt >> characterName >> skin;
+        std::cerr << "Name is " << characterName << std::endl;
+        std::cerr << "Skin is " << skin << std::endl;
     }
 }
 
