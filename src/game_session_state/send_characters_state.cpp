@@ -6,6 +6,8 @@
 
 #include "abstract_game_server.hpp"
 
+#include "errors.hpp"
+
 #include "game_session.hpp"
 #include "game_session_state/send_characters_state.hpp"
 
@@ -61,6 +63,7 @@ void SendCharactersState::_answer(const Dummy::Protocol::OutgoingPacket& pkt) {
 
 void SendCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     // From here, the player has either created a character or selected one.
+    ::AbstractGameServer& svr(m_gameSession->gameServer());
     std::uint8_t command;
     pkt >> command;
 
@@ -72,6 +75,17 @@ void SendCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
         pkt >> characterName >> skin;
         std::cerr << "Name is " << characterName << std::endl;
         std::cerr << "Skin is " << skin << std::endl;
+
+        try {
+            svr.createCharacter(
+                *m_gameSession->account(),
+                characterName, 
+                skin
+            );
+        } catch(const ::GameServerError& e) {
+            std::cerr << "Could not create character: "
+                << e.what() << std::endl;
+        }
     }
 }
 

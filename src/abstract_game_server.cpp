@@ -84,20 +84,33 @@ void AbstractGameServer::saveCharacter(
     const Dummy::Core::Character& character
 ) const
 {
-    fs::path characterFullPath(m_project.projectPath()
+    fs::path characterFullPath(m_serverPath
         / "accounts"
         / account.name()
         / "characters"
         / character.filename()
     );
 
+    fs::path symlinkPath(m_serverPath / "characters" / character.filename());
+
     if (!fs::exists(characterFullPath)) {
         //XXX: This should not happen. Throw an exception?
     }
-
-    std::ofstream ofs(characterFullPath.string());
+    std::cerr << "Path:" << characterFullPath.string() << std::endl;
+    std::ofstream ofs(characterFullPath.string(),
+                      std::ofstream::out | std::ios::binary);
     ofs << character;
     ofs.close();
+
+    // Create a (relative) symlink to reference the character.
+    fs::create_symlink(
+        fs::path("..")
+        / "accounts"
+        / account.name()
+        / "characters"
+        / character.filename(),
+        symlinkPath
+    );
 }
 
 Dummy::Core::Character
@@ -120,6 +133,10 @@ AbstractGameServer::createCharacter(const Dummy::Core::Account& account,
     }
 
     // From now, we consider the character being valid.
+    chr.setPosition(m_project.startingPosition());
+    chr.setMapLocation(m_project.startingMap());
+
+    saveCharacter(account, chr);
 
     return chr;
 
