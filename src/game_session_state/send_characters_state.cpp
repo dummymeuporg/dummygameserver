@@ -24,23 +24,23 @@ SendCharactersState::SendCharactersState(
 void SendCharactersState::resume() {
     // Send the list of characters.
     const ::AbstractGameServer& svr(m_gameSession->gameServer());
-    fs::path accountPath(svr.serverPath() /
-                         "accounts" / m_gameSession->account()->name());
+    fs::path accountPath(svr.serverPath()
+        / "accounts" / m_gameSession->account()->name() / "characters");
     std::vector<std::shared_ptr<Dummy::Core::Character>> characters;
 
     Dummy::Protocol::OutgoingPacket pkt;
 
-    std::uint16_t charactersCount = 0;
     for (const auto& entry: boost::make_iterator_range(
                 fs::directory_iterator(accountPath))) {
         std::cerr << "found " << entry << std::endl;
+        characters.push_back(nullptr);
 
         // TODO: load character.
     }
     std::cerr << "There are " << characters.size() << " characters."
         << std::endl;
 
-    pkt << charactersCount;
+    pkt << static_cast<std::uint16_t>(characters.size());
     _answer(pkt);
 }
 
