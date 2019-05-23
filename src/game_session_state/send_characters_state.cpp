@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include <boost/range/iterator_range.hpp>
 
@@ -33,14 +34,21 @@ void SendCharactersState::resume() {
     for (const auto& entry: boost::make_iterator_range(
                 fs::directory_iterator(accountPath))) {
         std::cerr << "found " << entry << std::endl;
-        characters.push_back(nullptr);
-
-        // TODO: load character.
+        std::shared_ptr<Dummy::Core::Character> chr =
+            std::make_shared<Dummy::Core::Character>();
+        std::ifstream ifs(entry.path().string(),
+                          std::ios::binary | std::ofstream::out);
+        ifs >> *chr;
+        characters.push_back(chr);
     }
     std::cerr << "There are " << characters.size() << " characters."
         << std::endl;
 
     pkt << static_cast<std::uint16_t>(characters.size());
+    for (const auto& chr: characters) {
+        std::cerr << "Name: " << chr->name() << std::endl;
+        pkt << *chr;
+    }
     _answer(pkt);
 }
 
