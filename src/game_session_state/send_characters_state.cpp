@@ -10,6 +10,7 @@
 #include "errors.hpp"
 
 #include "game_session.hpp"
+#include "game_session_state/manage_characters_state.hpp"
 #include "game_session_state/send_characters_state.hpp"
 
 #include "protocol/outgoing_packet.hpp"
@@ -63,6 +64,10 @@ void SendCharactersState::_answer(const Dummy::Protocol::OutgoingPacket& pkt) {
         {
             if (!ec)
             {
+                m_gameSession->changeState(
+                    std::make_shared<ManageCharactersState>(self)
+                );
+                // We wait for the client's input.
                 m_gameSession->next();
             }
         }
@@ -70,31 +75,7 @@ void SendCharactersState::_answer(const Dummy::Protocol::OutgoingPacket& pkt) {
 }
 
 void SendCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
-    // From here, the player has either created a character or selected one.
-    ::AbstractGameServer& svr(m_gameSession->gameServer());
-    std::uint8_t command;
-    pkt >> command;
-
-    std::cerr << "command: " << command << std::endl;
-    if (command == 1) {
-        std::cerr << "Create character." << std::endl;
-        std::string characterName;
-        std::string skin;
-        pkt >> characterName >> skin;
-        std::cerr << "Name is " << characterName << std::endl;
-        std::cerr << "Skin is " << skin << std::endl;
-
-        try {
-            svr.createCharacter(
-                *m_gameSession->account(),
-                characterName, 
-                skin
-            );
-        } catch(const ::GameServerError& e) {
-            std::cerr << "Could not create character: "
-                << e.what() << std::endl;
-        }
-    }
+    // Nothing to read from here.
 }
 
 } // namespace GameSessionState
