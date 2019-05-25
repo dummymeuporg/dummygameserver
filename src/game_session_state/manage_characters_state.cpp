@@ -18,7 +18,7 @@ namespace GameSessionState {
 
 ManageCharactersState::ManageCharactersState(
     std::shared_ptr<GameSession> gameSession,
-    std::vector<std::shared_ptr<Dummy::Core::Character>>&& characters
+    std::vector<std::shared_ptr<Dummy::Core::Character>> characters
 ) : GameSessionState(gameSession), m_characters(std::move(characters))
 {
 }
@@ -70,6 +70,7 @@ ManageCharactersState::_onCreateCharacter(Dummy::Protocol::IncomingPacket& pkt)
     Dummy::Protocol::OutgoingPacket outPkt;
     std::uint8_t answer;
     // For now, only 5 characters at most.
+    std::cerr << "Characters count: " << m_characters.size() << std::endl;
     if (m_characters.size() >= 5)
     {
         std::cerr << "Too much characters." << std::endl;
@@ -103,6 +104,7 @@ ManageCharactersState::_onCreateCharacter(Dummy::Protocol::IncomingPacket& pkt)
             outPkt << answer;
         }
     }
+    _answerOnCreateCharacter(outPkt);
 }
 
 void

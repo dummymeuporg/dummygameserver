@@ -55,19 +55,22 @@ void SendCharactersState::resume() {
 
 void SendCharactersState::_answer(
     const Dummy::Protocol::OutgoingPacket& pkt,
-    CharactersList&& characters
+    CharactersList characters
 ) {
     auto self(m_gameSession->shared_from_this());
     auto selfState(shared_from_this());
+                std::cerr << "There are " << characters.size() << " characters."
+                    << std::endl;
     boost::asio::async_write(
         m_gameSession->socket(),
         boost::asio::buffer(pkt.buffer(), pkt.size()),
-        [self, selfState, &characters, this](boost::system::error_code ec,
-                                             std::size_t length)
+        [self, selfState, characters, this](boost::system::error_code ec,
+                                            std::size_t length)
         {
             if (!ec)
             {
-                
+                std::cerr << "There are " << characters.size() << " characters."
+                    << std::endl;
                 m_gameSession->changeState(
                     std::make_shared<ManageCharactersState>(
                         self,

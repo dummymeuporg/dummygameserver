@@ -17,7 +17,7 @@ public:
     virtual void onRead(Dummy::Protocol::IncomingPacket&) override;
 private:
     void _answer(const Dummy::Protocol::OutgoingPacket&,
-                 CharactersList&&);
+                 CharactersList);
 };
 
 } // namespace GameSessionState

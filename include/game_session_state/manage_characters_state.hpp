@@ -11,7 +11,7 @@ class ManageCharactersState : public GameSessionState {
 public:
     ManageCharactersState(
         std::shared_ptr<GameSession>,
-        CharactersList&&);
+        CharactersList);
     virtual void resume() override;
     virtual void onRead(Dummy::Protocol::IncomingPacket&) override;
 private:
