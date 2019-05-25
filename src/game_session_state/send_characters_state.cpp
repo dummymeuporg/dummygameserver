@@ -50,22 +50,29 @@ void SendCharactersState::resume() {
         std::cerr << "Name: " << chr->name() << std::endl;
         pkt << *chr;
     }
-    _answer(pkt);
+    _answer(pkt, std::move(characters));
 }
 
-void SendCharactersState::_answer(const Dummy::Protocol::OutgoingPacket& pkt) {
+void SendCharactersState::_answer(
+    const Dummy::Protocol::OutgoingPacket& pkt,
+    CharactersList&& characters
+) {
     auto self(m_gameSession->shared_from_this());
     auto selfState(shared_from_this());
     boost::asio::async_write(
         m_gameSession->socket(),
         boost::asio::buffer(pkt.buffer(), pkt.size()),
-        [self, selfState, this](boost::system::error_code ec,
-                                std::size_t length)
+        [self, selfState, &characters, this](boost::system::error_code ec,
+                                             std::size_t length)
         {
             if (!ec)
             {
+                
                 m_gameSession->changeState(
-                    std::make_shared<ManageCharactersState>(self)
+                    std::make_shared<ManageCharactersState>(
+                        self,
+                        std::move(characters)
+                    )
                 );
                 // We wait for the client's input.
                 m_gameSession->next();

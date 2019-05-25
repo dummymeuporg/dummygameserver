@@ -17,8 +17,9 @@
 namespace GameSessionState {
 
 ManageCharactersState::ManageCharactersState(
-    std::shared_ptr<GameSession> gameSession
-) : GameSessionState(gameSession)
+    std::shared_ptr<GameSession> gameSession,
+    std::vector<std::shared_ptr<Dummy::Core::Character>>&& characters
+) : GameSessionState(gameSession), m_characters(std::move(characters))
 {
 }
 
@@ -26,7 +27,9 @@ void ManageCharactersState::resume() {
     // Nothing to do.
 }
 
-void ManageCharactersState::_answer(const Dummy::Protocol::OutgoingPacket& pkt)
+void ManageCharactersState::_answerOnCreateCharacter(
+    const Dummy::Protocol::OutgoingPacket& pkt
+)
 {
     auto self(m_gameSession->shared_from_this());
     auto selfState(shared_from_this());
@@ -64,23 +67,41 @@ void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt)
 void
 ManageCharactersState::_onCreateCharacter(Dummy::Protocol::IncomingPacket& pkt)
 {
-    ::AbstractGameServer& svr(m_gameSession->gameServer());
-    std::cerr << "Create character." << std::endl;
-    std::string characterName;
-    std::string skin;
-    pkt >> characterName >> skin;
-    std::cerr << "Name is " << characterName << std::endl;
-    std::cerr << "Skin is " << skin << std::endl;
+    Dummy::Protocol::OutgoingPacket outPkt;
+    std::uint8_t answer;
+    // For now, only 5 characters at most.
+    if (m_characters.size() >= 5)
+    {
+        std::cerr << "Too much characters." << std::endl;
+        answer = 0;
+        outPkt << answer;
+    } else {
+        ::AbstractGameServer& svr(m_gameSession->gameServer());
+        std::cerr << "Create character." << std::endl;
+        std::string characterName;
+        std::string skin;
+        pkt >> characterName >> skin;
+        std::cerr << "Name is " << characterName << std::endl;
+        std::cerr << "Skin is " << skin << std::endl;
 
-    try {
-        svr.createCharacter(
-            *m_gameSession->account(),
-            characterName, 
-            skin
-        );
-    } catch(const ::GameServerError& e) {
-        std::cerr << "Could not create character: "
-            << e.what() << std::endl;
+        try {
+            Dummy::Core::Character chr(
+                std::move(
+                    svr.createCharacter(
+                        *m_gameSession->account(),
+                        characterName, 
+                        skin
+                    )
+                )
+            );
+            answer = 1;
+            outPkt << answer << chr;
+        } catch(const ::GameServerError& e) {
+            std::cerr << "Could not create character: "
+                << e.what() << std::endl;
+            answer = 0;
+            outPkt << answer;
+        }
     }
 }
 

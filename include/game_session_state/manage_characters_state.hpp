@@ -5,15 +5,21 @@
 
 namespace GameSessionState {
 
+using CharactersList =
+    std::vector<std::shared_ptr<Dummy::Core::Character>>;
 class ManageCharactersState : public GameSessionState {
 public:
-    ManageCharactersState(std::shared_ptr<GameSession>);
+    ManageCharactersState(
+        std::shared_ptr<GameSession>,
+        CharactersList&&);
     virtual void resume() override;
     virtual void onRead(Dummy::Protocol::IncomingPacket&) override;
 private:
-    void _answer(const Dummy::Protocol::OutgoingPacket& pkt);
+    CharactersList m_characters;
     void _onCreateCharacter(Dummy::Protocol::IncomingPacket&);
+    void _answerOnCreateCharacter(const Dummy::Protocol::OutgoingPacket& pkt);
     void _onSelectCharacter(Dummy::Protocol::IncomingPacket&);
+    void _answerOnSelectCharacter(const Dummy::Protocol::OutgoingPacket& pkt);
 };
 
 };
