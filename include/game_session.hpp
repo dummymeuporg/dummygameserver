@@ -10,6 +10,7 @@
 #include "game_session_state/game_session_state.hpp"
 
 class AbstractGameServer;
+class Player;
 
 class GameSession : public std::enable_shared_from_this<GameSession>
 {
@@ -30,9 +31,13 @@ public:
         return m_account;
     }
 
-    void changeState(std::shared_ptr<GameSessionState::GameSessionState>);
+    std::shared_ptr<::Player> player() const {
+        return m_player;
+    }
 
+    void changeState(std::shared_ptr<GameSessionState::GameSessionState>);
     void setAccount(std::shared_ptr<Dummy::Core::Account>);
+    void setPlayer(std::shared_ptr<::Player>);
 
 private:
     boost::asio::ip::tcp::socket m_socket;
@@ -44,4 +49,5 @@ private:
     std::vector<uint8_t> m_payload;
     std::shared_ptr<GameSessionState::GameSessionState> m_state;
     std::shared_ptr<Dummy::Core::Account> m_account;
+    std::shared_ptr<::Player> m_player;
 };

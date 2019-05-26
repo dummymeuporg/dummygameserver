@@ -70,6 +70,10 @@ void GameSession::changeState(
     m_state->resume();
 }
 
+void GameSession::setPlayer(std::shared_ptr<::Player> player) {
+    m_player = player;
+}
+
 void GameSession::setAccount(std::shared_ptr<Dummy::Core::Account> account) {
    m_account = account; 
 }

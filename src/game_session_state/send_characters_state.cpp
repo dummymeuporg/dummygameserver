@@ -69,8 +69,8 @@ void SendCharactersState::_answer(
         {
             if (!ec)
             {
-                std::cerr << "There are " << characters.size() << " characters."
-                    << std::endl;
+                std::cerr << "There are " << characters.size() <<
+                    " characters." << std::endl;
                 m_gameSession->changeState(
                     std::make_shared<ManageCharactersState>(
                         self,

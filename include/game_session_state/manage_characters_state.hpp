@@ -7,6 +7,8 @@ namespace GameSessionState {
 
 using CharactersList =
     std::vector<std::shared_ptr<Dummy::Core::Character>>;
+using CharactersMap =
+    std::map<std::string, std::shared_ptr<Dummy::Core::Character>>;
 class ManageCharactersState : public GameSessionState {
 public:
     ManageCharactersState(
@@ -16,10 +18,18 @@ public:
     virtual void onRead(Dummy::Protocol::IncomingPacket&) override;
 private:
     CharactersList m_characters;
+    CharactersMap m_charactersMap;
     void _onCreateCharacter(Dummy::Protocol::IncomingPacket&);
     void _answerOnCreateCharacter(const Dummy::Protocol::OutgoingPacket& pkt);
     void _onSelectCharacter(Dummy::Protocol::IncomingPacket&);
-    void _answerOnSelectCharacter(const Dummy::Protocol::OutgoingPacket& pkt);
+
+    void _answerFailOnSelectCharacter(
+        const Dummy::Protocol::OutgoingPacket& pkt
+    );
+
+    void _answerSuccessOnSelectCharacter(
+        const Dummy::Protocol::OutgoingPacket& pkt
+    );
 };
 
 };
