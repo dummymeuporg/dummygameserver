@@ -9,6 +9,7 @@
 #include "abstract_game_server.hpp"
 #include "errors.hpp"
 #include "game_session.hpp"
+#include "game_session_state/loading_state.hpp"
 #include "game_session_state/manage_characters_state.hpp"
 #include "player.hpp"
 
@@ -174,7 +175,19 @@ void ManageCharactersState::_answerSuccessOnSelectCharacter(
         {
             if (!ec)
             {
+                std::shared_ptr<Dummy::Core::Character> chr =
+                    m_gameSession->player()->character();
                 std::cerr << "Character chosen. Let's play!" << std::endl;
+                // toggle loading state with a "teleport request"
+                m_gameSession->changeState(
+                    std::make_shared<LoadingState>(
+                        m_gameSession,
+                        Dummy::Protocol::TeleportRequest(
+                            chr->mapLocation(),
+                            chr->position()
+                        )
+                    )
+                );
                 m_gameSession->next();
             }
         }

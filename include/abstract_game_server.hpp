@@ -16,6 +16,7 @@
 namespace fs = boost::filesystem;
 using boost::asio::ip::tcp;
 
+class Player;
 class ServerMap;
 
 class AbstractGameServer {
@@ -43,6 +44,9 @@ public:
     Dummy::Core::Character createCharacter(const Dummy::Core::Account&,
                                            const std::string& characterName,
                                            const std::string& skin) const;
+
+    void teleportPlayerToServerMap(std::shared_ptr<::Player>,
+                                   const std::string& serverMap);
 
     void saveCharacter(
         const Dummy::Core::Account&,
