@@ -16,6 +16,8 @@
 namespace fs = boost::filesystem;
 using boost::asio::ip::tcp;
 
+class ServerMap;
+
 class AbstractGameServer {
 public:
     AbstractGameServer(boost::asio::io_service&,
@@ -26,6 +28,8 @@ public:
     const fs::path& serverPath() const {
         return m_serverPath;
     }
+
+    void _spawnServerMaps();
 
     void connect(const boost::uuids::uuid& sessionID,
                  const std::string&);
@@ -57,5 +61,7 @@ protected:
              std::shared_ptr<Dummy::Core::Account>> m_pendingAccounts;
     std::map<std::string,
              std::shared_ptr<Dummy::Core::Account>> m_connectedAccounts;
+    std::map<std::string,
+             std::shared_ptr<::ServerMap>> m_serverMaps;
 
 };

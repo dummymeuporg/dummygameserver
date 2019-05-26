@@ -3,6 +3,7 @@
 #include "abstract_game_server.hpp"
 #include "errors.hpp"
 #include "game_session.hpp"
+#include "server_map.hpp"
 
 AbstractGameServer::AbstractGameServer(
     boost::asio::io_service& ioService,
@@ -15,8 +16,18 @@ AbstractGameServer::AbstractGameServer(
     m_project(projectPath),
     m_serverPath(serverPath)
 {
-    // Validate config?
-    // Load project?
+    m_project.load();
+    _spawnServerMaps();
+}
+
+void AbstractGameServer::_spawnServerMaps()
+{
+    for(auto const &projectMap : m_project.maps()) {
+        std::cerr << "Spawn map " << projectMap.first << std::endl;
+        m_serverMaps[projectMap.first] = std::make_shared<::ServerMap>(
+            *this, *projectMap.second
+        );
+    }
 }
 
 void AbstractGameServer::_doAccept()
