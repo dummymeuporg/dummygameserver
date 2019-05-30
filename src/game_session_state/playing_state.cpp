@@ -36,7 +36,12 @@ void PlayingState::_onMove(Dummy::Protocol::IncomingPacket& pkt) {
     std::uint8_t answer = 1;
     pkt >> x >> y;
     std::cerr << "Move to " << x << "," << y << std::endl; 
-    player->setPosition(x, y);
+    
+    if (serverMap->isBlocking(x, y)) {
+        std::cerr << "[!] Wrong position!" << std::endl;
+    } else {
+        player->setPosition(x, y);
+    }
     Dummy::Protocol::OutgoingPacket outPkt;
     outPkt << answer;
     _answer(outPkt);

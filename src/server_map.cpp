@@ -19,3 +19,7 @@ void ServerMap::removePlayer(std::shared_ptr<::Player> player) {
         m_players.erase(player);
     }
 }
+
+bool ServerMap::isBlocking(std::uint16_t x, std::uint16_t y) const {
+    return m_map.isBlocking(x, y);
+}

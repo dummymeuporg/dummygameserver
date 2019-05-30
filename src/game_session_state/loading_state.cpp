@@ -47,6 +47,7 @@ void LoadingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
             previousServerMap->removePlayer(player);
         }
         newServerMap->addPlayer(player);
+        player->setServerMap(newServerMap);
         
         answer = 1;
         outPkt << answer;
