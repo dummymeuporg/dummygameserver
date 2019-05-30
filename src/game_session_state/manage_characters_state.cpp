@@ -93,17 +93,23 @@ ManageCharactersState::_onCreateCharacter(Dummy::Protocol::IncomingPacket& pkt)
         std::cerr << "Skin is " << skin << std::endl;
 
         try {
-            Dummy::Core::Character chr(
-                std::move(
-                    svr.createCharacter(
-                        *m_gameSession->account(),
-                        characterName, 
-                        skin
+            std::shared_ptr<Dummy::Core::Character> chr =
+                std::make_shared<Dummy::Core::Character>(
+                    std::move(
+                        svr.createCharacter(
+                            *m_gameSession->account(),
+                            characterName, 
+                            skin
+                        )
                     )
-                )
-            );
+                );
+
+            // Here, if the character has been created, no exception should
+            // be thrown.
+            m_characters.push_back(chr);
+            m_charactersMap[chr->name()] = chr;
             answer = 1;
-            outPkt << answer << chr;
+            outPkt << answer << *chr;
         } catch(const ::GameServerError& e) {
             std::cerr << "Could not create character: "
                 << e.what() << std::endl;
