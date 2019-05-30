@@ -17,6 +17,14 @@ GameSession::GameSession(boost::asio::ip::tcp::socket s,
 
 }
 
+void GameSession::close() {
+    m_state = nullptr;
+    if (nullptr != m_player) {
+        // XXX: disconnect player from its current map.
+    }
+    m_socket.close();
+}
+
 void GameSession::start()
 {
 	m_state = std::make_shared<GameSessionState::InitialState>(
@@ -36,10 +44,12 @@ void GameSession::_doReadHeader() {
         boost::asio::buffer(&m_header, sizeof(std::uint16_t)),
         [this, self](boost::system::error_code ec, std::size_t length)
         {
-            if (!ec)
-            {
+            if (!ec) {
                 m_payload.resize(m_header);
                 _doReadContent();
+            } else {
+                std::cerr << "Error while reading size." << std::endl;
+                close();
             }
         }
     );
@@ -52,11 +62,18 @@ void GameSession::_doReadContent() {
         boost::asio::buffer(m_payload, m_header),
         [this, self](boost::system::error_code ec, std::size_t length)
         {
-            if (!ec)
-            {
+            if (!ec) {
                 std::cerr << "Read " << length << " bytes.";
-                Dummy::Protocol::IncomingPacket pkt(m_payload);
-                m_state->onRead(pkt);
+                try {
+                    Dummy::Protocol::IncomingPacket pkt(m_payload);
+                    m_state->onRead(pkt);
+                } catch(const Dummy::Protocol::Error& e) {
+                    std::cerr << e.what();
+                    close();
+                }
+            } else {
+                std::cerr << "Error while reading content." << std::endl;
+                close();
             }
         }
 	);

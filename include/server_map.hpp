@@ -19,7 +19,8 @@ public:
     ServerMap(
         ::AbstractGameServer&,
         const Dummy::Core::Map&);
-    void addPlayer(std::shared_ptr<::Player> m_player);
+    void addPlayer(std::shared_ptr<::Player>);
+    void removePlayer(std::shared_ptr<::Player>);
 private:
     ::AbstractGameServer& m_abstractGameServer;
     const Dummy::Core::Map& m_map;

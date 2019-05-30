@@ -16,6 +16,7 @@ class GameSession : public std::enable_shared_from_this<GameSession>
 {
 public:
     GameSession(boost::asio::ip::tcp::socket, AbstractGameServer&);
+    void close();
     void next();
     void start();
 
