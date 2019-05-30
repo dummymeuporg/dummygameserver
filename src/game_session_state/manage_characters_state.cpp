@@ -61,6 +61,7 @@ void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt)
     switch(command) {
     case 1:
         _onCreateCharacter(pkt);
+        break;
     case 2:
         _onSelectCharacter(pkt);
     break;
