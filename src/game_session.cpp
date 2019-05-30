@@ -6,6 +6,7 @@
 #include "abstract_game_server.hpp"
 #include "abstract_game_server.hpp"
 #include "game_session.hpp"
+#include "player.hpp"
 
 GameSession::GameSession(boost::asio::ip::tcp::socket s,
                          AbstractGameServer& gameServer)
@@ -21,6 +22,8 @@ void GameSession::close() {
     m_state = nullptr;
     if (nullptr != m_player) {
         // XXX: disconnect player from its current map.
+        m_player->setServerMap(nullptr);
+        saveCharacter();
     }
     m_socket.close();
 }
@@ -93,4 +96,9 @@ void GameSession::setPlayer(std::shared_ptr<::Player> player) {
 
 void GameSession::setAccount(std::shared_ptr<Dummy::Core::Account> account) {
    m_account = account; 
+}
+
+void GameSession::saveCharacter() {
+    std::cerr << "Save character." << std::endl;
+    m_gameServer.saveCharacter(*m_account, *(m_player->character()));
 }

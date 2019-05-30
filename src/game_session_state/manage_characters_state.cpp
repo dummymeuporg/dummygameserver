@@ -199,8 +199,6 @@ void ManageCharactersState::_answerSuccessOnSelectCharacter(
             }
         }
     );
-
-
 }
 
 } // namespace GameSessionState

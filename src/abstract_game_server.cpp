@@ -90,6 +90,26 @@ AbstractGameServer::characterExists(
     return fs::exists(m_serverPath / "characters" / character.filename());
 }
 
+void AbstractGameServer::createCharacterFile(
+    const Dummy::Core::Account& account,
+    const Dummy::Core::Character& character
+) const
+{
+    saveCharacter(account, character);
+    fs::path symlinkPath(m_serverPath / "characters" / character.filename());
+
+    // Create a (relative) symlink to reference the character.
+    fs::create_symlink(
+        fs::path("..")
+        / "accounts"
+        / account.name()
+        / "characters"
+        / character.filename(),
+        symlinkPath
+    );
+
+}
+
 void AbstractGameServer::saveCharacter(
     const Dummy::Core::Account& account,
     const Dummy::Core::Character& character
@@ -102,8 +122,6 @@ void AbstractGameServer::saveCharacter(
         / character.filename()
     );
 
-    fs::path symlinkPath(m_serverPath / "characters" / character.filename());
-
     if (!fs::exists(characterFullPath)) {
         //XXX: This should not happen. Throw an exception?
     }
@@ -112,16 +130,6 @@ void AbstractGameServer::saveCharacter(
                       std::ofstream::out | std::ios::binary);
     ofs << character;
     ofs.close();
-
-    // Create a (relative) symlink to reference the character.
-    fs::create_symlink(
-        fs::path("..")
-        / "accounts"
-        / account.name()
-        / "characters"
-        / character.filename(),
-        symlinkPath
-    );
 }
 
 Dummy::Core::Character
@@ -144,10 +152,14 @@ AbstractGameServer::createCharacter(const Dummy::Core::Account& account,
     }
 
     // From now, we consider the character being valid.
-    chr.setPosition(m_project.startingPosition());
+    std::pair<std::uint16_t, std::uint16_t>
+        position(m_project.startingPosition());
+    position.first *= 2;
+    position.second *= 2;
+    chr.setPosition(position);
     chr.setMapLocation(m_project.startingMap());
 
-    saveCharacter(account, chr);
+    createCharacterFile(account, chr);
 
     return chr;
 

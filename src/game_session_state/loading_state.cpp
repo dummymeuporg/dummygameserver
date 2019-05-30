@@ -1,5 +1,9 @@
+#include "abstract_game_server.hpp"
 #include "game_session.hpp"
 #include "game_session_state/loading_state.hpp"
+#include "game_session_state/playing_state.hpp"
+#include "player.hpp"
+#include "server_map.hpp"
 
 namespace GameSessionState {
 
@@ -16,6 +20,8 @@ void LoadingState::resume() {
 }
 
 void LoadingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
+    ::AbstractGameServer& srv(m_gameSession->gameServer());
+    std::shared_ptr<::Player> player(m_gameSession->player());
     std::string mapName;
     std::pair<std::uint16_t, std::uint16_t> position;
     Dummy::Protocol::OutgoingPacket outPkt;
@@ -31,6 +37,17 @@ void LoadingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     {
         std::cerr << "Request correct. Teleport. " << std::endl;
         // XXX: insert player in the servermap.
+        std::shared_ptr<::ServerMap> previousServerMap =
+            player->serverMap();
+        std::shared_ptr<::ServerMap> newServerMap =
+            srv.serverMap(mapName);
+
+        // Can happen, mostly when the player just connected.
+        if (nullptr != previousServerMap) {
+            previousServerMap->removePlayer(player);
+        }
+        newServerMap->addPlayer(player);
+        
         answer = 1;
         outPkt << answer;
         _answerSuccess(outPkt);
@@ -50,6 +67,9 @@ void LoadingState::_answerSuccess(const Dummy::Protocol::OutgoingPacket& pkt)
         {
             if (!ec) {
                 /* Switch to game state. */
+                m_gameSession->changeState(
+                    std::make_shared<PlayingState>(m_gameSession)
+                );
                 m_gameSession->next();
             }
         }

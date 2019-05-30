@@ -39,6 +39,7 @@ public:
     void changeState(std::shared_ptr<GameSessionState::GameSessionState>);
     void setAccount(std::shared_ptr<Dummy::Core::Account>);
     void setPlayer(std::shared_ptr<::Player>);
+    void saveCharacter();
 
 private:
     boost::asio::ip::tcp::socket m_socket;

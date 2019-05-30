@@ -48,12 +48,21 @@ public:
     void teleportPlayerToServerMap(std::shared_ptr<::Player>,
                                    const std::string& serverMap);
 
+    void createCharacterFile(
+        const Dummy::Core::Account&,
+        const Dummy::Core::Character&
+    ) const;
+
     void saveCharacter(
         const Dummy::Core::Account&,
         const Dummy::Core::Character&
     ) const;
 
     virtual void run() = 0;
+
+    std::shared_ptr<::ServerMap> serverMap(const std::string& mapName) {
+        return m_serverMaps[mapName];
+    }
 
 protected:
     void _doAccept();
