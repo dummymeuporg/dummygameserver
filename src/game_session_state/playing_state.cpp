@@ -60,4 +60,23 @@ void PlayingState::_answer(const Dummy::Protocol::OutgoingPacket& pkt) {
     );
 }
 
+void PlayingState::_updateLivings(std::shared_ptr<::Player> player,
+                                  std::shared_ptr<::ServerMap> map,
+                                  Dummy::Protocol::OutgoingPacket& pkt) {
+
+    // Get the players around.
+    for (const auto otherPlayer: map->players()) {
+        if (player == otherPlayer) {
+            continue;
+        }
+
+        std::shared_ptr<const Dummy::Core::Character>
+            chr(otherPlayer->character());
+        if (m_livings.find(chr->name()) == std::end(m_livings)) {
+            // A new character appeared.
+        }
+    }
+
+}
+
 } // namespace GameSessionState

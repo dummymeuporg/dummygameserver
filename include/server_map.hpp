@@ -22,6 +22,9 @@ public:
     void addPlayer(std::shared_ptr<::Player>);
     void removePlayer(std::shared_ptr<::Player>);
     bool isBlocking(std::uint16_t, std::uint16_t) const;
+    std::set<std::shared_ptr<::Player>> players() const {
+        return m_players;
+    }
 private:
     ::AbstractGameServer& m_abstractGameServer;
     const Dummy::Core::Map& m_map;

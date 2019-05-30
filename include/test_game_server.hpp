@@ -17,5 +17,5 @@ public:
                    const fs::path& serverPath);
     virtual void run() override;
 private:
-    void _instantiateTestAccount();
+    void _instantiateTestAccount(const std::string&, const std::string&);
 };
