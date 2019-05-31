@@ -15,6 +15,7 @@ void Player::setServerMap(std::shared_ptr<::ServerMap> serverMap) {
 
 void
 Player::setPosition(const std::pair<std::uint16_t, std::uint16_t>& pos) {
+    m_serverPosition = pos;
     m_character->setPosition(pos); 
 }
 

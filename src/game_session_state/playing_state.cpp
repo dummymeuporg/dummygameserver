@@ -105,6 +105,8 @@ void PlayingState::_updateLivings(std::shared_ptr<::Player> player,
                     otherPlayer.second->serverPosition().first,
                     otherPlayer.second->serverPosition().second
                 );
+                std::cerr << "UPDATE POS TO: " << living.x() << ", "
+                    << living.y() << std::endl;
             }
 
             if (living.chipset() !=
@@ -160,7 +162,7 @@ void PlayingState::_updateLivings(std::shared_ptr<::Player> player,
     std::uint16_t count = mapUpdates.size();
     pkt << count;
     for (const auto& update: mapUpdates) {
-        pkt << *update;
+        pkt << update->code() << *update;
     }
 }
 
