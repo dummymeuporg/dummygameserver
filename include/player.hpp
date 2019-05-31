@@ -18,6 +18,10 @@ public:
         return m_character;
     }
 
+    const std::string& name() const {
+        return m_character->name();
+    }
+
     const std::pair<std::uint16_t, std::uint16_t>& serverPosition() const {
         return m_serverPosition;
     }

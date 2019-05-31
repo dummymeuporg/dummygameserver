@@ -9,14 +9,14 @@ ServerMap::ServerMap(::AbstractGameServer& abstractGameServer,
 }
 
 void ServerMap::addPlayer(std::shared_ptr<::Player> player) {
-    if (m_players.find(player) == std::end(m_players)) {
-        m_players.insert(player);
+    if (m_players.find(player->name()) == std::end(m_players)) {
+        m_players[player->name()] = player;
     }
 }
 
 void ServerMap::removePlayer(std::shared_ptr<::Player> player) {
-    if (m_players.find(player) != std::end(m_players)) {
-        m_players.erase(player);
+    if (m_players.find(player->name()) != std::end(m_players)) {
+        m_players.erase(player->name());
     }
 }
 

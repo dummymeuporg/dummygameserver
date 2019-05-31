@@ -19,7 +19,7 @@ private:
                         std::shared_ptr<::ServerMap> map,
                         Dummy::Protocol::OutgoingPacket& pkt);
 
-    std::map<std::string, Dummy::Protocol::Living> m_livings;
+    std::map<std::string, std::unique_ptr<Dummy::Protocol::Living>> m_livings;
 };
 
 } // namespace GameSessionState
