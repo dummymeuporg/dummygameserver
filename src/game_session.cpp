@@ -66,7 +66,6 @@ void GameSession::_doReadContent() {
         [this, self](boost::system::error_code ec, std::size_t length)
         {
             if (!ec) {
-                std::cerr << "Read " << length << " bytes.";
                 try {
                     Dummy::Protocol::IncomingPacket pkt(m_payload);
                     m_state->onRead(pkt);

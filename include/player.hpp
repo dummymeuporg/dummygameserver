@@ -22,8 +22,8 @@ public:
         return m_character->name();
     }
 
-    const std::pair<std::uint16_t, std::uint16_t>& serverPosition() const {
-        return m_serverPosition;
+    const std::pair<std::uint16_t, std::uint16_t> serverPosition() const {
+        return m_character->position();
     }
 
     std::shared_ptr<::ServerMap> serverMap() const {
@@ -37,7 +37,6 @@ public:
 private:
     std::shared_ptr<::GameSession> m_gameSession;
     std::shared_ptr<Dummy::Core::Character> m_character;
-    std::pair<std::uint16_t, std::uint16_t> m_serverPosition;
     std::shared_ptr<::ServerMap> m_serverMap;
 
 };

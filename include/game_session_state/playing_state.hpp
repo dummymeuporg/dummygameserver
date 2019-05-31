@@ -14,6 +14,7 @@ public:
     virtual void resume() override;
 private:
     void _onMove(Dummy::Protocol::IncomingPacket&);
+    void _onPing(Dummy::Protocol::IncomingPacket&);
     void _answer(const Dummy::Protocol::OutgoingPacket&);
     void _updateLivings(std::shared_ptr<::Player> player,
                         std::shared_ptr<::ServerMap> map,

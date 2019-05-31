@@ -28,6 +28,10 @@ void PlayingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
         /* Move */
         _onMove(pkt);
         break;
+    case 2:
+        /* Ping. */
+        _onPing(pkt);
+        break;
     default:
         break;
     }
@@ -39,13 +43,30 @@ void PlayingState::_onMove(Dummy::Protocol::IncomingPacket& pkt) {
     std::uint16_t x, y;
     std::uint8_t answer = 1;
     pkt >> x >> y;
-    std::cerr << "Move to " << x << "," << y << std::endl; 
+    std::cerr << "[" << player->name() << "] Move to "
+        << x << "," << y << std::endl; 
     
     if (serverMap->isBlocking(x, y)) {
         std::cerr << "[!] Wrong position!" << std::endl;
     } else {
         player->setPosition(x, y);
     }
+    Dummy::Protocol::OutgoingPacket outPkt;
+    outPkt << answer;
+    _updateLivings(player, serverMap, outPkt);
+    _answer(outPkt);
+}
+
+void PlayingState::_onPing(Dummy::Protocol::IncomingPacket& pkt) {
+    // XXX: We will handle the ping later. Send characters updates.
+    std::uint8_t answer = 1;
+    std::shared_ptr<::Player> player(m_gameSession->player());
+    std::shared_ptr<::ServerMap> serverMap(player->serverMap());
+
+    std::cerr << player->name() << " is at "
+        << player->serverPosition().first << ", "
+        << player->serverPosition().second << std::endl;
+
     Dummy::Protocol::OutgoingPacket outPkt;
     outPkt << answer;
     _updateLivings(player, serverMap, outPkt);
