@@ -1,11 +1,13 @@
 #pragma once
 
+#include <memory>
+
 #include "core/character.hpp"
 #include "game_session.hpp"
 
 class ServerMap;
 
-class Player {
+class Player : public std::enable_shared_from_this<Player> {
 public:
     Player(std::shared_ptr<::GameSession>,
            std::shared_ptr<Dummy::Core::Character>);
@@ -33,6 +35,7 @@ public:
     void setServerMap(std::shared_ptr<::ServerMap>);
     void setPosition(const std::pair<std::uint16_t, std::uint16_t>&);
     void setPosition(std::uint16_t, std::uint16_t);
+    void leaveCurrentMap();
 
 private:
     std::shared_ptr<::GameSession> m_gameSession;

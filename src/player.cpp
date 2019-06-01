@@ -9,7 +9,16 @@ Player::Player(std::shared_ptr<::GameSession> gameSession,
 
 }
 
+void Player::leaveCurrentMap() {
+    auto self(shared_from_this());
+    if (nullptr != m_serverMap) {
+        m_serverMap->removePlayer(shared_from_this());
+        m_serverMap = nullptr;
+    }
+}
+
 void Player::setServerMap(std::shared_ptr<::ServerMap> serverMap) {
+    leaveCurrentMap();
     m_serverMap = serverMap;
 }
 

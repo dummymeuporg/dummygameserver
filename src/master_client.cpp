@@ -15,17 +15,12 @@ MasterClient::MasterClient(boost::asio::io_service& ioService,
     m_ioService(ioService), m_socket(ioService),
     m_projectDir(projectDir), m_accountsDir(accountsDir),
     m_configDir(configDir), m_serverName(serverName),
-    m_masterPublicKey(nullptr),
-    m_rsaKeyPair(fs::path(m_configDir / ".conf" / "pub.pem").string(),
-                 fs::path(m_configDir / ".conf" / "priv.pem").string()),
     m_state(new MasterClientState::InitialState(*this))
 {
-    _loadMasterKey();
     _doConnect(endpoints);
 }
 
 MasterClient::~MasterClient() {
-    ::EVP_PKEY_free(m_masterPublicKey);
     m_socket.close();
 }
 
@@ -67,26 +62,6 @@ void MasterClient::_sendPreambleContent() {
 
 }
 
-void MasterClient::_loadMasterKey() {
-
-    ::FILE* fMasterPub = ::fopen(
-        fs::path(m_configDir / "master.pem").string().c_str(), "rb");
-    if (nullptr == fMasterPub) {
-        throw Dummy::Crypto::PEMFileError();
-    }
-
-    m_masterPublicKey = PEM_read_PUBKEY(fMasterPub, NULL, NULL, NULL);
-    if (nullptr == m_masterPublicKey) {
-        ::fclose(fMasterPub);
-        throw Dummy::Crypto::KeyLoadingError();
-    }
-
-    ::fclose(fMasterPub);
-}
-
-void MasterClient::_encryptMasterKey() {
-
-}
 
 void MasterClient::next() {
     _doReadHeader();

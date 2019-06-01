@@ -16,6 +16,7 @@ void ServerMap::addPlayer(std::shared_ptr<::Player> player) {
 
 void ServerMap::removePlayer(std::shared_ptr<::Player> player) {
     if (m_players.find(player->name()) != std::end(m_players)) {
+        std::cerr << "Bye bye " << player->name() << std::endl;
         m_players.erase(player->name());
     }
 }

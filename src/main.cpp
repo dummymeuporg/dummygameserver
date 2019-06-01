@@ -4,7 +4,6 @@
 
 #include <boost/asio.hpp>
 
-#include "crypto/rsa_keypair.hpp"
 #include "master_client.hpp"
 #include "test_game_server.hpp"
 
