@@ -53,13 +53,13 @@ void PlayingState::_onMove(Dummy::Protocol::IncomingPacket& pkt) {
     }
     Dummy::Protocol::OutgoingPacket outPkt;
     outPkt << answer;
-    _updateLivings(player, serverMap, outPkt);
+    //_updateLivings(player, serverMap, outPkt);
     _answer(outPkt);
 }
 
 void PlayingState::_onPing(Dummy::Protocol::IncomingPacket& pkt) {
     // XXX: We will handle the ping later. Send characters updates.
-    std::uint8_t answer = 1;
+    std::uint8_t answer = 2;
     std::shared_ptr<::Player> player(m_gameSession->player());
     std::shared_ptr<::ServerMap> serverMap(player->serverMap());
 

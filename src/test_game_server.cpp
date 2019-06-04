@@ -46,5 +46,8 @@ void TestGameServer::run() {
     _instantiateTestAccount(
         "TEST.1111", "11111111-1111-1111-1111-111111111111"
     );
+    _instantiateTestAccount(
+        "TEST.2222", "00000000-0000-0000-0000-000000000000"
+    );
     _doAccept();
 }
