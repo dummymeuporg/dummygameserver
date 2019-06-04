@@ -1,7 +1,3 @@
-#define BOOST_LOG_DYN_LINK 1
-
-#include <boost/log/trivial.hpp>
-
 #include "master_client_state/initial_state.hpp"
 
 #include "master_client.hpp"
