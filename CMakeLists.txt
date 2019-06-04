@@ -14,7 +14,29 @@ file(GLOB_RECURSE HEADERS "include/*.hpp")
 source_group("include" FILES ${HEADERS} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
 source_group("src" FILES ${SOURCES} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
 
+set(CLIENT_LINK_LIBRARIES
+    ${Boost_LIBRARIES}
+    dummy
+)
+
+# On Linux, explicitly pass libraries.
+if (UNIX)
+    set(CLIENT_LINK_LIBRARIES
+        ${CLIENT_LINK_LIBRARIES}
+	boost_system
+        boost_filesystem
+        stdc++fs
+	pthread
+    )
+
+endif (UNIX)
+
+
 add_executable(dummygameserver ${SOURCES} ${HEADERS})
 
 target_include_directories(dummygameserver PUBLIC ${Boost_INCLUDE_DIR})
-target_link_libraries(dummygameserver dummy ${Boost_LIBRARIES})
+target_link_libraries(dummygameserver
+    dummy
+    ${Boost_LIBRARIES}
+    ${CLIENT_LINK_LIBRARIES}
+)
