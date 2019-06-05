@@ -2,6 +2,25 @@ cmake_minimum_required(VERSION 3.10.0)
 project(dummygameserver)
 include_directories(include vendor/libdummy/include)
 
+macro(GroupSources curdir)
+    file(
+        GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir}
+        ${PROJECT_SOURCE_DIR}/${curdir}/*
+    )
+    foreach(child ${children})
+        if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+            GroupSources(${curdir}/${child})
+        else()
+            string(REPLACE "/" "\\" groupname ${curdir})
+            source_group(
+                ${groupname}
+                FILES
+                ${PROJECT_SOURCE_DIR}/${curdir}/${child}
+            )
+        endif()
+    endforeach()
+endmacro()
+
 set (CMAKE_CXX_STANDARD 17)
 add_subdirectory("vendor/libdummy")
 
@@ -11,8 +30,8 @@ link_directories(${Boost_LIBRARY_DIRS})
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.hpp")
 
-source_group("include" FILES ${HEADERS} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
-source_group("src" FILES ${SOURCES} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
+GroupSources(include)
+GroupSources(src)
 
 set(CLIENT_LINK_LIBRARIES
     ${Boost_LIBRARIES}
