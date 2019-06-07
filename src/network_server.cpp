@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "server/game_session.hpp"
 #include "network_server.hpp"
 #include "errors.hpp"
 #include "network_session.hpp"
@@ -27,9 +28,11 @@ void NetworkServer::_doAccept()
         {
         	if (!ec) {
 				
+                auto gameSession = m_gameServer.buildGameSession();
+                gameSession->start();
             	std::make_shared<NetworkSession>(
                     std::move(socket),
-                    m_gameServer.buildGameSession()
+                    gameSession
                 )->start();
 				
 				std::cerr << "Start a new session." << std::endl;

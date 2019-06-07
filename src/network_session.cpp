@@ -7,13 +7,14 @@
 #include "server/game_session.hpp"
 #include "server/command/command.hpp"
 #include "server/response/response.hpp"
-#include "network_session_state/state.hpp"
+#include "network_session_state/initial_state.hpp"
 #include "network_session.hpp"
 
 NetworkSession::NetworkSession(
     boost::asio::ip::tcp::socket s,
     std::shared_ptr<Dummy::Server::GameSession> gameSession)
-    : m_socket(std::move(s)), m_gameSession(gameSession)
+    : m_socket(std::move(s)), m_gameSession(gameSession),
+      m_state(std::make_shared<NetworkSessionState::InitialState>(*this))
 {
 
 }

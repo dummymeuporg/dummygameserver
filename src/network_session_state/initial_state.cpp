@@ -50,6 +50,8 @@ InitialState::_getConnectCommand(Dummy::Protocol::IncomingPacket& pkt)
     std::string account, sessionID;
     pkt >> account >> sessionID;
 
+    std::cerr << "Account is " << account << std::endl;
+    std::cerr << "session ID is " << sessionID << std::endl;
     return std::make_unique<Dummy::Server::Command::ConnectCommand>(
         account, sessionID
     );
