@@ -4,6 +4,7 @@
 #include "protocol/outgoing_packet.hpp"
 #include "server/command/connect_command.hpp"
 #include "server/response/connect_response.hpp"
+#include "network_session.hpp"
 #include "network_session_state/initial_state.hpp"
 
 namespace NetworkSessionState {
@@ -65,9 +66,13 @@ void
 InitialState::visitResponse(
     const Dummy::Server::Response::ConnectResponse& connect
 ) {
+    auto self(shared_from_this());
     if(connect.status() == 0) {
         /* O.K., change the state */
         std::cerr << "Get to next network state" << std::endl;
+    } else {
+        std::cerr << "Error: close the connection." << std::endl;
+        m_networkSession.close();
     }
 }
 

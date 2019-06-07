@@ -60,12 +60,12 @@ void NetworkSession::_handlePacket(Dummy::Protocol::IncomingPacket& pkt) {
     std::unique_ptr<const Dummy::Server::Response::Response> response =
         m_gameSession->handleCommand(*cmd);
 
-    m_state->visit(*response);
-
     std::unique_ptr<const Dummy::Protocol::OutgoingPacket> outPkt =
         m_state->serializeResponse(*response);
 
     _sendPacket(*outPkt);
+
+    m_state->visit(*response);
 }
 
 void NetworkSession::_doReadContent() {
