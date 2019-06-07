@@ -6,6 +6,7 @@
 #include "server/response/connect_response.hpp"
 #include "network_session.hpp"
 #include "network_session_state/initial_state.hpp"
+#include "network_session_state/send_characters_state.hpp"
 
 namespace NetworkSessionState {
 
@@ -70,6 +71,9 @@ InitialState::visitResponse(
     if(connect.status() == 0) {
         /* O.K., change the state */
         std::cerr << "Get to next network state" << std::endl;
+        m_networkSession.changeState(
+            std::make_shared<SendCharactersState>(m_networkSession)
+        );
     } else {
         std::cerr << "Error: close the connection." << std::endl;
         m_networkSession.close();

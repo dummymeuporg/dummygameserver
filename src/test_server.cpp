@@ -11,14 +11,14 @@ TestServer::TestServer(
     // Instantiate a Test account. Put it in the pending accounts.
 }
 
-/*
-void TestGameServer::_instantiateTestAccount(
+
+void TestServer::_instantiateTestAccount(
     const std::string& accountName, const std::string& sessionID
 )
 {
     std::string testAccountName(accountName);
     fs::path accountPath(
-        m_serverPath / "accounts" / testAccountName
+        m_gameServer.serverPath() / "accounts" / accountName
     );
     if (!fs::exists(accountPath)) {
         std::cerr << "Test account directory does not exist. Create it."
@@ -27,20 +27,12 @@ void TestGameServer::_instantiateTestAccount(
         fs::create_directory(accountPath / "characters");
     }
 
-    boost::uuids::string_generator gen;
-    Dummy::Core::Account account(
-        testAccountName,
-        gen(sessionID)
-    );
-
+    m_gameServer.addPending(sessionID, accountName);
     std::cerr << "Connect to the server using " << testAccountName
-        << " and " << account.sessionUUID() << std::endl;
-    m_pendingAccounts[account.sessionUUID()] =
-        std::make_shared<Dummy::Core::Account>(account);
+        << " and " << sessionID << std::endl;
 }
-*/
+
 void TestServer::run() {
-    /*
     _instantiateTestAccount(
         "TEST.0000", "00000000-0000-0000-0000-000000000000"
     );
@@ -50,6 +42,5 @@ void TestServer::run() {
     _instantiateTestAccount(
         "TEST.2222", "00000000-0000-0000-0000-000000000000"
     );
-    */
     _doAccept();
 }
