@@ -6,10 +6,12 @@
 
 NetworkServer::NetworkServer(
     boost::asio::io_service& ioService,
-    unsigned short port
+    unsigned short port,
+    Dummy::Server::AbstractGameServer& server
 ) : m_acceptor(ioService,
                boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(),
-                                              port))
+                                              port)),
+    m_gameServer(server)
 {
 }
 
@@ -25,7 +27,10 @@ void NetworkServer::_doAccept()
         {
         	if (!ec) {
 				
-            	std::make_shared<NetworkSession>(std::move(socket))->start();
+            	std::make_shared<NetworkSession>(
+                    std::move(socket),
+                    m_gameServer.buildGameSession()
+                )->start();
 				
 				std::cerr << "Start a new session." << std::endl;
             }

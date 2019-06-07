@@ -4,8 +4,9 @@
 
 TestServer::TestServer(
     boost::asio::io_service& ioService,
-    unsigned short port
-) : NetworkServer(ioService, port)
+    unsigned short port,
+    Dummy::Server::AbstractGameServer& server
+) : NetworkServer(ioService, port, server)
 {
     // Instantiate a Test account. Put it in the pending accounts.
 }

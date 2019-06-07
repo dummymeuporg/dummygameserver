@@ -19,6 +19,11 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
+    std::cerr << "Instantiate the game server..." << std::endl;
+    Dummy::Server::AbstractGameServer gameServer(argv[1], argv[2]);
+    gameServer.run();
+    std::cerr << "Server running." << std::endl;
+
         
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
@@ -34,7 +39,7 @@ int main(int argc, char* argv[])
         argv[4]
     );*/
 
-    TestServer server(io_service, 6612);
+    TestServer server(io_service, 6612, gameServer);
     server.run();
     io_service.run();
 
