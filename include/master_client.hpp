@@ -1,16 +1,16 @@
 #pragma once
 
 #include <cstdint>
+#include <filesystem>
 #include <vector>
 
 #include <boost/asio.hpp>
 #include <boost/asio/io_service.hpp>
-#include <boost/filesystem.hpp>
 
 #include "master_client_state/master_client_state.hpp"
 
 using boost::asio::ip::tcp;
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 
 class MasterClient {
