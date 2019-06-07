@@ -10,14 +10,14 @@ class ServerMap;
 
 class NetworkServer {
 public:
-    AbstractGameServer(boost::asio::io_service&,
-                       unsigned short port);
+    NetworkServer(boost::asio::io_service&, unsigned short port);
 
-    virtual void run() = 0;
+    virtual void run();
 
 protected:
     void _doAccept();
 
     boost::asio::ip::tcp::acceptor m_acceptor;
+    //AbstractGameServer& m_gameServer;
 
 };

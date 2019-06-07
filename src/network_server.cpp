@@ -4,16 +4,20 @@
 #include "errors.hpp"
 #include "network_session.hpp"
 
-AbstractGameServer::AbstractGameServer(
+NetworkServer::NetworkServer(
     boost::asio::io_service& ioService,
-    unsigned short port,
+    unsigned short port
 ) : m_acceptor(ioService,
                boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(),
-                                              port)),
+                                              port))
 {
 }
 
-void AbstractGameServer::_doAccept()
+void NetworkServer::run() {
+    _doAccept();
+}
+
+void NetworkServer::_doAccept()
 {
 	m_acceptor.async_accept(
     	[this](boost::system::error_code ec,
@@ -21,8 +25,7 @@ void AbstractGameServer::_doAccept()
         {
         	if (!ec) {
 				
-            	std::make_shared<NetworkSession>(std::move(socket),
-                                                 *this)->start();
+            	std::make_shared<NetworkSession>(std::move(socket))->start();
 				
 				std::cerr << "Start a new session." << std::endl;
             }

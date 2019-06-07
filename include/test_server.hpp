@@ -1,20 +1,16 @@
 #pragma once
 #include <iostream>
+#include <filesystem>
 
 #include <boost/asio.hpp>
-#include <boost/filesystem.hpp>
 
-#include "abstract_game_server.hpp"
+#include "network_server.hpp"
 
-namespace fs = boost::filesystem;
 using boost::asio::ip::tcp;
 
-class TestGameServer : public AbstractGameServer {
+class TestServer : public NetworkServer {
 public:
-    TestGameServer(boost::asio::io_service&,
-                   unsigned short port,
-                   const fs::path& projectPath,
-                   const fs::path& serverPath);
+    TestServer(boost::asio::io_service&, unsigned short port);
     virtual void run() override;
 private:
     void _instantiateTestAccount(const std::string&, const std::string&);

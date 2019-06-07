@@ -1,13 +1,15 @@
 #include <cstdlib>
+#include <filesystem>
 #include <iostream>
 #include <thread>
 
 #include <boost/asio.hpp>
 
 #include "master_client.hpp"
-#include "test_game_server.hpp"
+#include "test_server.hpp"
 
 using boost::asio::ip::tcp;
+namespace fs = std::filesystem;
 
 int main(int argc, char* argv[])
 {
@@ -32,10 +34,7 @@ int main(int argc, char* argv[])
         argv[4]
     );*/
 
-    TestGameServer server(io_service,
-                          6612,
-                          fs::path(argv[1]),
-                          fs::path(argv[2]));
+    TestServer server(io_service, 6612);
     server.run();
     io_service.run();
 

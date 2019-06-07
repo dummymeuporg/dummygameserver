@@ -2,7 +2,7 @@
 
 #include "master_client.hpp"
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 MasterClient::MasterClient(boost::asio::io_service& ioService,
                            const tcp::resolver::results_type& endpoints,

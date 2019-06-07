@@ -2,12 +2,11 @@
 
 #include <boost/asio.hpp>
 
+#include "protocol/incoming_packet.hpp"
 #include "network_session.hpp"
 
-NetworkSession::NetworkSession(boost::asio::ip::tcp::socket s,
-                               NetworkServer& networkServer)
-    : m_socket(std::move(s)),
-      m_gameServer(gameServer)
+NetworkSession::NetworkSession(boost::asio::ip::tcp::socket s)
+    : m_socket(std::move(s))
 {
 
 }
@@ -53,7 +52,7 @@ void NetworkSession::_doReadContent() {
             if (!ec) {
                 try {
                     Dummy::Protocol::IncomingPacket pkt(m_payload);
-                    m_state->onRead(pkt);
+                    //m_state->onRead(pkt);
                 } catch(const Dummy::Protocol::Error& e) {
                     std::cerr << e.what();
                     close();
