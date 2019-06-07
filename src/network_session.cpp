@@ -77,6 +77,7 @@ void NetworkSession::_doReadContent() {
             if (!ec) {
                 try {
                     Dummy::Protocol::IncomingPacket pkt(m_payload);
+                    std::cerr << "Got packet" << std::endl;
                     _handlePacket(pkt);
                 } catch(const Dummy::Protocol::Error& e) {
                     std::cerr << e.what();
