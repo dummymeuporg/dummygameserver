@@ -5,8 +5,6 @@
 TestGameServer::TestGameServer(
     boost::asio::io_service& ioService,
     unsigned short port,
-    const fs::path& projectPath,
-    const fs::path& serverPath
 ) : AbstractGameServer(ioService, port, projectPath, serverPath)
 {
     // Instantiate a Test account. Put it in the pending accounts.

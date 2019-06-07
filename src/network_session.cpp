@@ -2,45 +2,30 @@
 
 #include <boost/asio.hpp>
 
-#include "game_session_state/initial_state.hpp"
-#include "abstract_game_server.hpp"
-#include "abstract_game_server.hpp"
-#include "game_session.hpp"
-#include "player.hpp"
+#include "network_session.hpp"
 
-GameSession::GameSession(boost::asio::ip::tcp::socket s,
-                         AbstractGameServer& gameServer)
+NetworkSession::NetworkSession(boost::asio::ip::tcp::socket s,
+                               NetworkServer& networkServer)
     : m_socket(std::move(s)),
-      m_gameServer(gameServer),
-      m_state(nullptr),
-      m_account(nullptr)      
+      m_gameServer(gameServer)
 {
 
 }
 
-void GameSession::close() {
-    m_state = nullptr;
-    if (nullptr != m_player) {
-        // XXX: disconnect player from its current map.
-        m_player->setServerMap(nullptr);
-        saveCharacter();
-    }
+void NetworkSession::close() {
     m_socket.close();
 }
 
-void GameSession::start()
+void NetworkSession::start()
 {
-	m_state = std::make_shared<GameSessionState::InitialState>(
-		shared_from_this()
-	);
     _doReadHeader();
 }
 
-void GameSession::next() {
+void NetworkSession::next() {
     _doReadHeader();
 }
 
-void GameSession::_doReadHeader() {
+void NetworkSession::_doReadHeader() {
     auto self(shared_from_this());
     boost::asio::async_read(
         m_socket,
@@ -58,7 +43,7 @@ void GameSession::_doReadHeader() {
     );
 }
 
-void GameSession::_doReadContent() {
+void NetworkSession::_doReadContent() {
     auto self(shared_from_this());
     boost::asio::async_read(
         m_socket,
@@ -79,25 +64,4 @@ void GameSession::_doReadContent() {
             }
         }
 	);
-}
-
-void GameSession::changeState(
-    std::shared_ptr<GameSessionState::GameSessionState> state
-)
-{
-    m_state = state;
-    m_state->resume();
-}
-
-void GameSession::setPlayer(std::shared_ptr<::Player> player) {
-    m_player = player;
-}
-
-void GameSession::setAccount(std::shared_ptr<Dummy::Core::Account> account) {
-   m_account = account; 
-}
-
-void GameSession::saveCharacter() {
-    std::cerr << "Save character." << std::endl;
-    m_gameServer.saveCharacter(*m_account, *(m_player->character()));
 }
