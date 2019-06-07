@@ -1,6 +1,8 @@
 #pragma once
 
+#include <exception>
 #include <memory>
+#include "server/response/response_visitor.hpp"
 
 namespace Dummy {
 namespace Protocol {
@@ -23,7 +25,19 @@ class NetworkSession;
 
 namespace NetworkSessionState {
 
-class State : public std::enable_shared_from_this<State> {
+class Error : public std::exception {
+
+};
+
+class UnknownCommandError : public Error {
+public:
+    virtual const char* what() const noexcept override {
+        return "the command code is incorrect";
+    };
+};
+
+class State : public std::enable_shared_from_this<State>,
+              public Dummy::Server::Response::ResponseVisitor {
 public:
     State(::NetworkSession&);
 
@@ -34,6 +48,8 @@ public:
     virtual
     std::unique_ptr<const Dummy::Server::Command::Command>
     getCommand(Dummy::Protocol::IncomingPacket&) = 0;
+
+    virtual void visit(const Dummy::Server::Response::Response&) = 0;
 
 protected:
     ::NetworkSession& m_networkSession;
