@@ -26,6 +26,7 @@ class NetworkSession : public std::enable_shared_from_this<NetworkSession> {
 public:
     NetworkSession(boost::asio::ip::tcp::socket,
                    std::shared_ptr<Dummy::Server::GameSession>);
+    virtual ~NetworkSession();
     void close();
     void next();
     void start();
@@ -45,6 +46,7 @@ private:
 
     std::uint16_t m_header;
     std::vector<uint8_t> m_payload;
+    bool m_isRunning;
 
     std::shared_ptr<Dummy::Server::GameSession> m_gameSession;
     std::shared_ptr<NetworkSessionState::State> m_state;

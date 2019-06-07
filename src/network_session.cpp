@@ -14,17 +14,29 @@ NetworkSession::NetworkSession(
     boost::asio::ip::tcp::socket s,
     std::shared_ptr<Dummy::Server::GameSession> gameSession)
     : m_socket(std::move(s)), m_gameSession(gameSession),
-      m_state(std::make_shared<NetworkSessionState::InitialState>(*this))
+      m_state(std::make_shared<NetworkSessionState::InitialState>(*this)),
+      m_isRunning(false)
 {
 
 }
 
+NetworkSession::~NetworkSession() {
+    std::cerr << "Ending network session." << std::endl;
+}
+
 void NetworkSession::close() {
-    m_socket.close();
+    if (m_isRunning) {
+        m_socket.close();
+        m_gameSession->close();
+        m_gameSession.reset();
+        m_state.reset();
+        m_isRunning = false;
+    }
 }
 
 void NetworkSession::start()
 {
+    m_isRunning = true;
     _doReadHeader();
 }
 
