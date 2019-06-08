@@ -56,14 +56,21 @@ std::unique_ptr<const Dummy::Server::Command::CreateCharacter>
 ManageCharactersState::_createCharacter(Dummy::Protocol::IncomingPacket& pkt)
 {
     // XXX: create character command
-    return nullptr;
+    std::string name, skin;
+    pkt >> name >> skin;
+    return std::make_unique<Dummy::Server::Command::CreateCharacter>(
+        name, skin       
+    );
 }
 
 std::unique_ptr<const Dummy::Server::Command::SelectCharacter>
 ManageCharactersState::_selectCharacter(Dummy::Protocol::IncomingPacket& pkt)
 {
-    // XXX: select character command
-    return nullptr;
+    std::string name;
+    pkt >> name;
+    return std::make_unique<Dummy::Server::Command::SelectCharacter>(
+        name
+    );
 }
 
 
