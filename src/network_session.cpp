@@ -69,8 +69,11 @@ void NetworkSession::_handlePacket(Dummy::Protocol::IncomingPacket& pkt) {
         m_state->getCommand(pkt);
 
     // Forward the command into the game session
+    m_gameSession->handleCommand(*cmd);
+
+    // Immediatly get the response
     std::unique_ptr<const Dummy::Server::Response::Response> response =
-        m_gameSession->handleCommand(*cmd);
+        m_gameSession->getResponse();
 
     std::unique_ptr<const Dummy::Protocol::OutgoingPacket> outPkt =
         m_state->serializeResponse(*response);
