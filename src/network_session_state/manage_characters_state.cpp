@@ -91,7 +91,11 @@ void ManageCharactersState::visitResponse(
     const Dummy::Server::Response::SelectCharacter& response
 ) {
     auto self(shared_from_this());
-    std::cerr << "Select Character" << std::endl;
+    if (response.status() == 0) {
+        std::cerr << "Select Character" << std::endl;
+    } else {
+        std::cerr << "Error while selecting character" << std::endl;
+    }
 }
 
 

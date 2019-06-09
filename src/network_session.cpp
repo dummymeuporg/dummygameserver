@@ -8,6 +8,7 @@
 #include "server/command/command.hpp"
 #include "server/response/response.hpp"
 #include "network_session_state/initial_state.hpp"
+#include "response_packet.hpp"
 #include "network_session.hpp"
 
 NetworkSession::NetworkSession(
@@ -75,10 +76,11 @@ void NetworkSession::_handlePacket(Dummy::Protocol::IncomingPacket& pkt) {
     std::unique_ptr<const Dummy::Server::Response::Response> response =
         m_gameSession->getResponse();
 
-    std::unique_ptr<const Dummy::Protocol::OutgoingPacket> outPkt =
-        m_state->serializeResponse(*response);
+    ResponsePacket packet;
 
-    _sendPacket(*outPkt);
+    response->accept(packet);
+
+    _sendPacket(packet);
 
     m_state->visit(*response);
 }
@@ -93,7 +95,6 @@ void NetworkSession::_doReadContent() {
             if (!ec) {
                 try {
                     Dummy::Protocol::IncomingPacket pkt(m_payload);
-                    std::cerr << "Got packet" << std::endl;
                     _handlePacket(pkt);
                 } catch(const Dummy::Protocol::Error& e) {
                     std::cerr << e.what();

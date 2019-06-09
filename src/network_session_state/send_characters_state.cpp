@@ -6,6 +6,7 @@
 #include "server/response/characters_list_response.hpp"
 #include "network_session.hpp"
 #include "network_session_state/send_characters_state.hpp"
+#include "network_session_state/manage_characters_state.hpp"
 
 namespace NetworkSessionState {
 
@@ -64,6 +65,9 @@ SendCharactersState::visitResponse(
 ) {
     auto self(shared_from_this());
     std::cerr << "Auto switch to next state" << std::endl;
+    m_networkSession.changeState(
+        std::make_shared<ManageCharactersState>(m_networkSession)
+    );
 }
 
 } // namespace NetworkSessionState
