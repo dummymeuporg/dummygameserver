@@ -42,10 +42,6 @@ public:
     State(::NetworkSession&);
 
     virtual
-    std::unique_ptr<const Dummy::Protocol::OutgoingPacket>
-    serializeResponse(const Dummy::Server::Response::Response&) = 0;
-
-    virtual
     std::unique_ptr<const Dummy::Server::Command::Command>
     getCommand(Dummy::Protocol::IncomingPacket&) = 0;
 

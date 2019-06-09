@@ -8,6 +8,7 @@
 #include "server/response/select_character.hpp"
 #include "network_session.hpp"
 #include "network_session_state/manage_characters_state.hpp"
+#include "network_session_state/loading_state.hpp"
 
 namespace NetworkSessionState {
 
@@ -15,20 +16,6 @@ ManageCharactersState::ManageCharactersState(::NetworkSession& networkSession)
     : State(networkSession)
 {
 
-}
-
-std::unique_ptr<const Dummy::Protocol::OutgoingPacket>
-ManageCharactersState::serializeResponse(
-    const Dummy::Server::Response::Response& response
-)
-{
-    std::unique_ptr<Dummy::Protocol::OutgoingPacket> outPkt =
-        std::make_unique<Dummy::Protocol::OutgoingPacket>();
-
-    *outPkt <<
-        static_cast<std::uint16_t>(Dummy::Protocol::Bridge::GET_PRIMARY_INFO);
-    response.serializeTo(*outPkt);
-    return outPkt;
 }
 
 std::unique_ptr<const Dummy::Server::Command::Command>
@@ -55,7 +42,6 @@ ManageCharactersState::getCommand(Dummy::Protocol::IncomingPacket& pkt)
 std::unique_ptr<const Dummy::Server::Command::CreateCharacter>
 ManageCharactersState::_createCharacter(Dummy::Protocol::IncomingPacket& pkt)
 {
-    // XXX: create character command
     std::string name, skin;
     pkt >> name >> skin;
     return std::make_unique<Dummy::Server::Command::CreateCharacter>(
@@ -92,7 +78,10 @@ void ManageCharactersState::visitResponse(
 ) {
     auto self(shared_from_this());
     if (response.status() == 0) {
-        std::cerr << "Select Character" << std::endl;
+        std::cerr << "Select Character O.K." << std::endl;
+        m_networkSession.changeState(
+            std::make_shared<LoadingState>(m_networkSession)
+        );
     } else {
         std::cerr << "Error while selecting character" << std::endl;
     }

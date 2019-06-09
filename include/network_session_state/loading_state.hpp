@@ -5,21 +5,21 @@
 namespace Dummy {
 namespace Server {
 namespace Command {
-class GetPrimaryInfoCommand;
-} // namespace ConnectCommand
+class TeleportMap;
+} // namespace Command
 
 namespace Response {
-class CharactersListResponse;
-} // namespace ConnectResponse
-
+class TeleportMap;
 } // namespace Response
+
+} // namespace Server
 } // namespace Dummy
 
 namespace NetworkSessionState {
 
-class SendCharactersState : public State {
+class LoadingState : public State {
 public:
-    SendCharactersState(::NetworkSession&);
+    LoadingState(::NetworkSession&);
 
     virtual
     std::unique_ptr<const Dummy::Server::Command::Command>
@@ -28,13 +28,11 @@ public:
     virtual void visit(const Dummy::Server::Response::Response&) override;
 
     virtual void
-    visitResponse(const Dummy::Server::Response::CharactersListResponse&)
-    override;
+    visitResponse(const Dummy::Server::Response::TeleportMap&) override;
 
 private:
-    std::unique_ptr<const Dummy::Server::Command::GetPrimaryInfoCommand>
-    _getPrimaryInfo(Dummy::Protocol::IncomingPacket&);
-
+    std::unique_ptr<const Dummy::Server::Command::TeleportMap>
+    _teleportMap(Dummy::Protocol::IncomingPacket&);
 };
 
 } // namespace NetworkSessionState

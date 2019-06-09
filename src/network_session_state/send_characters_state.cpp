@@ -16,20 +16,6 @@ SendCharactersState::SendCharactersState(::NetworkSession& networkSession)
 
 }
 
-std::unique_ptr<const Dummy::Protocol::OutgoingPacket>
-SendCharactersState::serializeResponse(
-    const Dummy::Server::Response::Response& response
-)
-{
-    std::unique_ptr<Dummy::Protocol::OutgoingPacket> outPkt =
-        std::make_unique<Dummy::Protocol::OutgoingPacket>();
-
-    *outPkt <<
-        static_cast<std::uint16_t>(Dummy::Protocol::Bridge::GET_PRIMARY_INFO);
-    response.serializeTo(*outPkt);
-    return outPkt;
-}
-
 std::unique_ptr<const Dummy::Server::Command::Command>
 SendCharactersState::getCommand(Dummy::Protocol::IncomingPacket& pkt)
 {

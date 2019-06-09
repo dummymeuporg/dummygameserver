@@ -16,19 +16,6 @@ InitialState::InitialState(::NetworkSession& networkSession)
 
 }
 
-std::unique_ptr<const Dummy::Protocol::OutgoingPacket>
-InitialState::serializeResponse(
-    const Dummy::Server::Response::Response& response
-)
-{
-    std::unique_ptr<Dummy::Protocol::OutgoingPacket> outPkt =
-        std::make_unique<Dummy::Protocol::OutgoingPacket>();
-
-    *outPkt << static_cast<std::uint16_t>(Dummy::Protocol::Bridge::CONNECT);
-    response.serializeTo(*outPkt);
-    return outPkt;
-}
-
 std::unique_ptr<const Dummy::Server::Command::Command>
 InitialState::getCommand(Dummy::Protocol::IncomingPacket& pkt)
 {
