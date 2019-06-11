@@ -6,6 +6,7 @@
 #include "server/response/teleport_map.hpp"
 #include "network_session.hpp"
 #include "network_session_state/loading_state.hpp"
+#include "network_session_state/playing_state.hpp"
 
 namespace NetworkSessionState {
 
@@ -51,6 +52,12 @@ void LoadingState::visitResponse(
 ) {
     auto self(shared_from_this());
     std::cerr << "Teleport to map" << std::endl;
+    if (response.status() == 0) {
+        std::cerr << "Switch to playing state." << std::endl;
+        m_networkSession.changeState(
+            std::make_shared<PlayingState>(m_networkSession)
+        );
+    }
 }
 
 } // namespace NetworkSessionState

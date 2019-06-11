@@ -2,7 +2,9 @@
 #include "server/response/connect_response.hpp"
 #include "server/response/characters_list_response.hpp"
 #include "server/response/create_character.hpp"
+#include "server/response/ping.hpp"
 #include "server/response/select_character.hpp"
+#include "server/response/set_position.hpp"
 #include "server/response/teleport_map.hpp"
 
 #include "response_packet.hpp"
@@ -41,5 +43,19 @@ void ResponsePacket::visitResponse(
     const Dummy::Server::Response::TeleportMap& response
 ) {
     *this << Dummy::Protocol::Bridge::TELEPORT_MAP;
+    response.serializeTo(*this);
+}
+
+void ResponsePacket::visitResponse(
+    const Dummy::Server::Response::Ping& response
+) {
+    *this << Dummy::Protocol::Bridge::PING;
+    response.serializeTo(*this);
+}
+
+void ResponsePacket::visitResponse(
+    const Dummy::Server::Response::SetPosition& response
+) {
+    *this << Dummy::Protocol::Bridge::SET_POSITION;
     response.serializeTo(*this);
 }

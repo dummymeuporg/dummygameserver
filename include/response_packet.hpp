@@ -20,20 +20,26 @@ class ResponsePacket : public Dummy::Protocol::OutgoingPacket,
 public:
     ResponsePacket();
 
-    virtual void visitResponse(
+    void visitResponse(
         const Dummy::Server::Response::ConnectResponse&
     ) override;
-    virtual void visitResponse(
+    void visitResponse(
         const Dummy::Server::Response::CharactersListResponse&
     ) override;
-    virtual void visitResponse(
+    void visitResponse(
         const Dummy::Server::Response::CreateCharacter&
     ) override;
-    virtual void visitResponse(
+    void visitResponse(
         const Dummy::Server::Response::SelectCharacter&
     ) override;
-    virtual void visitResponse(
+    void visitResponse(
         const Dummy::Server::Response::TeleportMap&
+    ) override;
+    void visitResponse(
+        const Dummy::Server::Response::Ping&
+    ) override;
+    void visitResponse(
+        const Dummy::Server::Response::SetPosition&
     ) override;
 
 };

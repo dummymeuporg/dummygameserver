@@ -6,10 +6,12 @@ namespace Dummy {
 namespace Server {
 namespace Command {
 class Ping;
+class SetPosition;
 } // namespace Command
 
 namespace Response {
 class Ping;
+class SetPosition;
 } // namespace Response
 
 } // namespase Server
@@ -18,6 +20,7 @@ class Ping;
 namespace NetworkSessionState {
 
 class PlayingState : public State {
+public:
     PlayingState(::NetworkSession&);
 
     virtual
@@ -26,11 +29,13 @@ class PlayingState : public State {
 
     virtual void visit(const Dummy::Server::Response::Response&) override;
 
-    virtual void
-    visitResponse(const Dummy::Server::Response::Ping&) override;
+    void visitResponse(const Dummy::Server::Response::Ping&) override;
+    void visitResponse(const Dummy::Server::Response::SetPosition&) override;
 private:
     std::unique_ptr<const Dummy::Server::Command::Ping>
     _ping(Dummy::Protocol::IncomingPacket&);
+    std::unique_ptr<const Dummy::Server::Command::SetPosition>
+    _setPosition(Dummy::Protocol::IncomingPacket&);
 };
 
 }
