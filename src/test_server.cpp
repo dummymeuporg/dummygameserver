@@ -34,13 +34,19 @@ void TestServer::_instantiateTestAccount(
 
 void TestServer::run() {
     _instantiateTestAccount(
-        "TEST.0000", "00000000-0000-0000-0000-000000000000"
+        "WHITESCALE.1337", "00000000-0000-0000-0000-000000000000"
     );
     _instantiateTestAccount(
-        "TEST.1111", "11111111-1111-1111-1111-111111111111"
+        "GRINDEWALD.8932", "00000000-0000-0000-0000-000000000000"
     );
     _instantiateTestAccount(
-        "TEST.2222", "22222222-2222-2222-2222-222222222222"
+        "SANCTUS.0818", "00000000-0000-0000-0000-000000000000"
+    );
+    _instantiateTestAccount(
+        "RETRO.9921", "00000000-0000-0000-0000-000000000000"
+    );
+    _instantiateTestAccount(
+        "ILUKA.3333", "00000000-0000-0000-0000-000000000000"
     );
     _doAccept();
 }
