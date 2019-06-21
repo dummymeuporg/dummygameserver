@@ -42,12 +42,9 @@ set(CLIENT_LINK_LIBRARIES
 if (UNIX)
     set(CLIENT_LINK_LIBRARIES
         ${CLIENT_LINK_LIBRARIES}
-	boost_system
-        boost_filesystem
-        stdc++fs
-	pthread
+	    boost_system
+	    pthread
     )
-
 endif (UNIX)
 
 
