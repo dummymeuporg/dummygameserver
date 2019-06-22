@@ -48,5 +48,8 @@ void TestServer::run() {
     _instantiateTestAccount(
         "ILUKA.3333", "00000000-0000-0000-0000-000000000005"
     );
+    _instantiateTestAccount(
+        "TEST.0006", "00000000-0000-0000-0000-000000000006"
+    );
     _doAccept();
 }
