@@ -2,11 +2,12 @@
 
 #include <boost/asio.hpp>
 
-#include "protocol/incoming_packet.hpp"
-#include "protocol/outgoing_packet.hpp"
-#include "server/game_session.hpp"
-#include "server/command/command.hpp"
-#include "server/response/response.hpp"
+#include <dummy/protocol/incoming_packet.hpp>
+#include <dummy/protocol/outgoing_packet.hpp>
+#include <dummy/server/game_session.hpp>
+#include <dummy/server/command/command.hpp>
+#include <dummy/server/response/response.hpp>
+
 #include "network_session_state/initial_state.hpp"
 #include "response_packet.hpp"
 #include "network_session.hpp"

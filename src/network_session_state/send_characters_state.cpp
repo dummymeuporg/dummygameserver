@@ -1,9 +1,11 @@
 #include <iostream>
-#include "protocol/bridge.hpp"
-#include "protocol/incoming_packet.hpp"
-#include "protocol/outgoing_packet.hpp"
-#include "server/command/get_primary_info_command.hpp"
-#include "server/response/characters_list_response.hpp"
+
+#include <dummy/protocol/bridge.hpp>
+#include <dummy/protocol/incoming_packet.hpp>
+#include <dummy/protocol/outgoing_packet.hpp>
+#include <dummy/server/command/get_primary_info_command.hpp>
+#include <dummy/server/response/characters_list_response.hpp>
+
 #include "network_session.hpp"
 #include "network_session_state/send_characters_state.hpp"
 #include "network_session_state/manage_characters_state.hpp"

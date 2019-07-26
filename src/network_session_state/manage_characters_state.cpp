@@ -1,11 +1,13 @@
 #include <iostream>
-#include "protocol/bridge.hpp"
-#include "protocol/incoming_packet.hpp"
-#include "protocol/outgoing_packet.hpp"
-#include "server/command/create_character.hpp"
-#include "server/command/select_character.hpp"
-#include "server/response/create_character.hpp"
-#include "server/response/select_character.hpp"
+
+#include <dummy/protocol/bridge.hpp>
+#include <dummy/protocol/incoming_packet.hpp>
+#include <dummy/protocol/outgoing_packet.hpp>
+#include <dummy/server/command/create_character.hpp>
+#include <dummy/server/command/select_character.hpp>
+#include <dummy/server/response/create_character.hpp>
+#include <dummy/server/response/select_character.hpp>
+
 #include "network_session.hpp"
 #include "network_session_state/manage_characters_state.hpp"
 #include "network_session_state/loading_state.hpp"
