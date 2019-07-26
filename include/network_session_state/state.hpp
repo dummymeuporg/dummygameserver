@@ -2,7 +2,7 @@
 
 #include <exception>
 #include <memory>
-#include "server/response/response_visitor.hpp"
+#include <dummy/server/response/response_visitor.hpp>
 
 namespace Dummy {
 namespace Protocol {

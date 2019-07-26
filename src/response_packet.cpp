@@ -1,11 +1,11 @@
-#include "protocol/bridge.hpp"
-#include "server/response/connect_response.hpp"
-#include "server/response/characters_list_response.hpp"
-#include "server/response/create_character.hpp"
-#include "server/response/ping.hpp"
-#include "server/response/select_character.hpp"
-#include "server/response/set_position.hpp"
-#include "server/response/teleport_map.hpp"
+#include <dummy/protocol/bridge.hpp>
+#include <dummy/server/response/connect_response.hpp>
+#include <dummy/server/response/characters_list_response.hpp>
+#include <dummy/server/response/create_character.hpp>
+#include <dummy/server/response/ping.hpp>
+#include <dummy/server/response/select_character.hpp>
+#include <dummy/server/response/set_position.hpp>
+#include <dummy/server/response/teleport_map.hpp>
 
 #include "response_packet.hpp"
 

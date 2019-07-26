@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "server/game_session.hpp"
+#include <dummy/server/game_session.hpp>
 #include "network_server.hpp"
 #include "errors.hpp"
 #include "network_session.hpp"

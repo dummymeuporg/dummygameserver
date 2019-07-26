@@ -1,7 +1,7 @@
 #pragma once
 
-#include "protocol/outgoing_packet.hpp"
-#include "server/response/response_visitor.hpp"
+#include <dummy/protocol/outgoing_packet.hpp>
+#include <dummy/server/response/response_visitor.hpp>
 
 namespace Dummy {
 namespace Server {

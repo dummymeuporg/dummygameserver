@@ -3,7 +3,7 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
 
-#include "server/abstract_game_server.hpp"
+#include <dummy/server/abstract_game_server.hpp>
 
 using boost::asio::ip::tcp;
 
