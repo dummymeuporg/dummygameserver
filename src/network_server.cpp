@@ -6,10 +6,10 @@
 #include "network_session.hpp"
 
 NetworkServer::NetworkServer(
-    boost::asio::io_service& ioService,
+    boost::asio::io_context& ioContext,
     unsigned short port,
     Dummy::Server::AbstractGameServer& server
-) : m_acceptor(ioService,
+) : m_acceptor(ioContext,
                boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(),
                                               port)),
     m_gameServer(server)

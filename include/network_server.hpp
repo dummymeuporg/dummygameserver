@@ -12,7 +12,7 @@ class ServerMap;
 
 class NetworkServer {
 public:
-    NetworkServer(boost::asio::io_service&, unsigned short port,
+    NetworkServer(boost::asio::io_context&, unsigned short port,
                   Dummy::Server::AbstractGameServer&);
 
     virtual void run();

@@ -19,14 +19,14 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
+    boost::asio::io_context io_context;
+
+
     std::cerr << "Instantiate the game server..." << std::endl;
-    Dummy::Server::AbstractGameServer gameServer(argv[1], argv[2]);
+    Dummy::Server::AbstractGameServer gameServer(io_context, argv[1], argv[2]);
     gameServer.run();
     std::cerr << "Server running." << std::endl;
-
-        
-    boost::asio::io_service io_service;
-    tcp::resolver resolver(io_service);
+    tcp::resolver resolver(io_context);
     auto endpoints = resolver.resolve("127.0.0.1", "33338");
 
     /*
@@ -39,9 +39,9 @@ int main(int argc, char* argv[])
         argv[4]
     );*/
 
-    TestServer server(io_service, 6612, gameServer);
+    TestServer server(io_context, 6612, gameServer);
     server.run();
-    io_service.run();
+    io_context.run();
 
 
     return EXIT_SUCCESS;
