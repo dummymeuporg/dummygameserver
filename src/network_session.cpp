@@ -4,7 +4,7 @@
 
 #include <dummy/protocol/incoming_packet.hpp>
 #include <dummy/protocol/outgoing_packet.hpp>
-#include <dummy/server/game_session.hpp>
+#include <dummy/server/game_session_communicator.hpp>
 #include <dummy/server/command/command.hpp>
 #include <dummy/server/response/response.hpp>
 
@@ -12,10 +12,14 @@
 #include "response_packet.hpp"
 #include "network_session.hpp"
 
+using GameSessionCommunicatorPtr =
+    std::shared_ptr<Dummy::Server::GameSessionCommunicator>;
+
 NetworkSession::NetworkSession(
     boost::asio::ip::tcp::socket s,
-    std::shared_ptr<Dummy::Server::GameSession> gameSession)
-    : m_socket(std::move(s)), m_gameSession(gameSession),
+    GameSessionCommunicatorPtr gameSessionCommunicator)
+    : m_socket(std::move(s)),
+      m_gameSessionCommunicator(gameSessionCommunicator),
       m_state(std::make_shared<NetworkSessionState::InitialState>(*this)),
       m_isRunning(false)
 {
@@ -29,8 +33,11 @@ NetworkSession::~NetworkSession() {
 void NetworkSession::close() {
     if (m_isRunning) {
         m_socket.close();
+        // XXX: Notify the game session somehow.
+        /*
         m_gameSession->close();
         m_gameSession.reset();
+        */
         m_state.reset();
         m_isRunning = false;
     }
@@ -71,21 +78,29 @@ void NetworkSession::_handlePacket(Dummy::Protocol::IncomingPacket& pkt) {
         m_state->getCommand(pkt);
 
     // Forward the command into the game session
-    m_gameSession->handleCommand(*cmd);
+    m_gameSessionCommunicator->forwardCommand(*cmd);
 
+    /*
     // Immediatly get the response
     std::unique_ptr<const Dummy::Server::Response::Response> response =
         m_gameSession->getResponse();
 
     if (response != nullptr) {
         ResponsePacket packet;
-
         response->accept(packet);
-
         _sendPacket(packet);
-
-        m_state->visit(*response);
+        m_state->visit(*response)
     }
+    */
+}
+
+void NetworkSession::handleResponse(
+    const Dummy::Server::Response::Response& response
+) {
+    ResponsePacket packet;
+    response.accept(packet);
+    _sendPacket(packet);
+    m_state->visit(response);
 }
 
 void NetworkSession::_doReadContent() {

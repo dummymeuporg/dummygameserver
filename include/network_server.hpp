@@ -19,7 +19,7 @@ public:
 
 protected:
     void _doAccept();
-
+    boost::asio::io_context& m_ioContext;
     boost::asio::ip::tcp::acceptor m_acceptor;
     Dummy::Server::AbstractGameServer& m_gameServer;
 

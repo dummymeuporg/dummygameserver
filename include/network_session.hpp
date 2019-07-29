@@ -6,13 +6,15 @@
 
 #include <boost/asio.hpp>
 
+#include <dummy/server/response/handler.hpp>
+
 namespace Dummy {
 namespace Protocol {
 class IncomingPacket;
 class OutgoingPacket;
 } // namespace Protocol
 namespace Server {
-class GameSession;
+class GameSessionCommunicator;
 } // namespace Server
 } // namespace Dummy
 
@@ -22,10 +24,11 @@ namespace NetworkSessionState {
 class State;
 } // namespace NetworkSessionState
 
-class NetworkSession : public std::enable_shared_from_this<NetworkSession> {
+class NetworkSession : public std::enable_shared_from_this<NetworkSession>,
+                       public Dummy::Server::Response::Handler {
 public:
     NetworkSession(boost::asio::ip::tcp::socket,
-                   std::shared_ptr<Dummy::Server::GameSession>);
+                   std::shared_ptr<Dummy::Server::GameSessionCommunicator>);
     virtual ~NetworkSession();
     void close();
     void next();
@@ -36,6 +39,7 @@ public:
     }
 
     void changeState(std::shared_ptr<NetworkSessionState::State>);
+    void handleResponse(const Dummy::Server::Response::Response&) override;
 
 private:
     boost::asio::ip::tcp::socket m_socket;
@@ -48,6 +52,8 @@ private:
     std::vector<uint8_t> m_payload;
     bool m_isRunning;
 
-    std::shared_ptr<Dummy::Server::GameSession> m_gameSession;
+    std::shared_ptr<Dummy::Server::GameSessionCommunicator>
+        m_gameSessionCommunicator;
+
     std::shared_ptr<NetworkSessionState::State> m_state;
 };
