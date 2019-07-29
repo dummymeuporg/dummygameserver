@@ -77,13 +77,15 @@ void NetworkSession::_handlePacket(Dummy::Protocol::IncomingPacket& pkt) {
     std::unique_ptr<const Dummy::Server::Response::Response> response =
         m_gameSession->getResponse();
 
-    ResponsePacket packet;
+    if (response != nullptr) {
+        ResponsePacket packet;
 
-    response->accept(packet);
+        response->accept(packet);
 
-    _sendPacket(packet);
+        _sendPacket(packet);
 
-    m_state->visit(*response);
+        m_state->visit(*response);
+    }
 }
 
 void NetworkSession::_doReadContent() {

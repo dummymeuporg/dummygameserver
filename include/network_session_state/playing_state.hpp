@@ -5,6 +5,7 @@
 namespace Dummy {
 namespace Server {
 namespace Command {
+class Message;
 class Ping;
 class SetPosition;
 } // namespace Command
@@ -34,8 +35,12 @@ public:
 private:
     std::unique_ptr<const Dummy::Server::Command::Ping>
     _ping(Dummy::Protocol::IncomingPacket&);
+
     std::unique_ptr<const Dummy::Server::Command::SetPosition>
     _setPosition(Dummy::Protocol::IncomingPacket&);
+
+    std::unique_ptr<const Dummy::Server::Command::Message>
+    message(Dummy::Protocol::IncomingPacket&);
 };
 
 }
