@@ -26,20 +26,15 @@ public:
     void visitResponse(
         const Dummy::Server::Response::CharactersListResponse&
     ) override;
-    void visitResponse(
-        const Dummy::Server::Response::CreateCharacter&
-    ) override;
-    void visitResponse(
-        const Dummy::Server::Response::SelectCharacter&
-    ) override;
-    void visitResponse(
-        const Dummy::Server::Response::TeleportMap&
-    ) override;
-    void visitResponse(
-        const Dummy::Server::Response::Ping&
-    ) override;
-    void visitResponse(
-        const Dummy::Server::Response::SetPosition&
-    ) override;
+
+    void
+    visitResponse(const Dummy::Server::Response::CreateCharacter&) override;
+    void
+
+    visitResponse(const Dummy::Server::Response::SelectCharacter&) override;
+    void visitResponse(const Dummy::Server::Response::TeleportMap&) override;
+    void visitResponse(const Dummy::Server::Response::Ping&) override;
+    void visitResponse(const Dummy::Server::Response::SetPosition&) override;
+    void visitResponse(const Dummy::Server::Response::Message&) override;
 
 };

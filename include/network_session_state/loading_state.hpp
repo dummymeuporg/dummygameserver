@@ -22,7 +22,7 @@ public:
     LoadingState(::NetworkSession&);
 
     virtual
-    std::unique_ptr<const Dummy::Server::Command::Command>
+    std::shared_ptr<const Dummy::Server::Command::Command>
     getCommand(Dummy::Protocol::IncomingPacket&) override;
 
     virtual void visit(const Dummy::Server::Response::Response&) override;
@@ -31,7 +31,7 @@ public:
     visitResponse(const Dummy::Server::Response::TeleportMap&) override;
 
 private:
-    std::unique_ptr<const Dummy::Server::Command::TeleportMap>
+    std::shared_ptr<const Dummy::Server::Command::TeleportMap>
     _teleportMap(Dummy::Protocol::IncomingPacket&);
 };
 

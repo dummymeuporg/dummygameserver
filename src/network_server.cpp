@@ -36,7 +36,7 @@ void NetworkServer::_doAccept()
                 );
                 auto gameSession = m_gameServer.buildGameSession(communicator);
                 gameSession->start();
-            	std::make_shared<NetworkSession>(
+                std::make_shared<NetworkSession>(
                     std::move(socket),
                     communicator
                 )->start();

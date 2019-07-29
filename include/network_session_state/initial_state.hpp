@@ -22,7 +22,7 @@ public:
     InitialState(::NetworkSession&);
 
     virtual
-    std::unique_ptr<const Dummy::Server::Command::Command>
+    std::shared_ptr<const Dummy::Server::Command::Command>
     getCommand(Dummy::Protocol::IncomingPacket&) override;
 
     virtual void visit(const Dummy::Server::Response::Response&) override;
@@ -31,7 +31,7 @@ public:
     visitResponse(const Dummy::Server::Response::ConnectResponse&) override;
 
 private:
-    std::unique_ptr<const Dummy::Server::Command::ConnectCommand>
+    std::shared_ptr<const Dummy::Server::Command::ConnectCommand>
     _getConnectCommand(Dummy::Protocol::IncomingPacket&);
 };
 

@@ -18,7 +18,7 @@ InitialState::InitialState(::NetworkSession& networkSession)
 
 }
 
-std::unique_ptr<const Dummy::Server::Command::Command>
+std::shared_ptr<const Dummy::Server::Command::Command>
 InitialState::getCommand(Dummy::Protocol::IncomingPacket& pkt)
 {
     std::uint16_t command;
@@ -35,7 +35,7 @@ InitialState::getCommand(Dummy::Protocol::IncomingPacket& pkt)
     }
 }
 
-std::unique_ptr<const Dummy::Server::Command::ConnectCommand>
+std::shared_ptr<const Dummy::Server::Command::ConnectCommand>
 InitialState::_getConnectCommand(Dummy::Protocol::IncomingPacket& pkt)
 {
     std::string account, sessionID;
@@ -43,7 +43,7 @@ InitialState::_getConnectCommand(Dummy::Protocol::IncomingPacket& pkt)
 
     std::cerr << "Account is " << account << std::endl;
     std::cerr << "session ID is " << sessionID << std::endl;
-    return std::make_unique<Dummy::Server::Command::ConnectCommand>(
+    return std::make_shared<Dummy::Server::Command::ConnectCommand>(
         account, sessionID
     );
 }

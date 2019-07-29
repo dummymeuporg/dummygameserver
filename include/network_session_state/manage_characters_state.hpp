@@ -24,7 +24,7 @@ public:
     ManageCharactersState(::NetworkSession&);
 
     virtual
-    std::unique_ptr<const Dummy::Server::Command::Command>
+    std::shared_ptr<const Dummy::Server::Command::Command>
     getCommand(Dummy::Protocol::IncomingPacket&) override;
 
     virtual void visit(const Dummy::Server::Response::Response&) override;
@@ -38,10 +38,10 @@ public:
     override;
 
 private:
-    std::unique_ptr<const Dummy::Server::Command::CreateCharacter>
+    std::shared_ptr<const Dummy::Server::Command::CreateCharacter>
     _createCharacter(Dummy::Protocol::IncomingPacket&);
 
-    std::unique_ptr<const Dummy::Server::Command::SelectCharacter>
+    std::shared_ptr<const Dummy::Server::Command::SelectCharacter>
     _selectCharacter(Dummy::Protocol::IncomingPacket&);
 
 };
