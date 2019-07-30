@@ -17,7 +17,7 @@ LoadingState::LoadingState(::NetworkSession& networkSession)
 {
 }
 
-std::unique_ptr<const Dummy::Server::Command::Command>
+std::shared_ptr<const Dummy::Server::Command::Command>
 LoadingState::getCommand(Dummy::Protocol::IncomingPacket& pkt)
 {
     std::uint16_t command;
@@ -32,13 +32,13 @@ LoadingState::getCommand(Dummy::Protocol::IncomingPacket& pkt)
     }
 }
 
-std::unique_ptr<const Dummy::Server::Command::TeleportMap>
+std::shared_ptr<const Dummy::Server::Command::TeleportMap>
 LoadingState::_teleportMap(Dummy::Protocol::IncomingPacket& pkt)
 {
     std::string mapName, instance;
     std::uint16_t dstX, dstY;
     pkt >> mapName >> dstX >> dstY >> instance;
-    return std::make_unique<Dummy::Server::Command::TeleportMap>(
+    return std::make_shared<Dummy::Server::Command::TeleportMap>(
         mapName, dstX, dstY, instance
     );
 }

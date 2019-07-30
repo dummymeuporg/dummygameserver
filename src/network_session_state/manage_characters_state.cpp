@@ -20,7 +20,7 @@ ManageCharactersState::ManageCharactersState(::NetworkSession& networkSession)
 
 }
 
-std::unique_ptr<const Dummy::Server::Command::Command>
+std::shared_ptr<const Dummy::Server::Command::Command>
 ManageCharactersState::getCommand(Dummy::Protocol::IncomingPacket& pkt)
 {
     std::uint16_t command;
@@ -41,7 +41,7 @@ ManageCharactersState::getCommand(Dummy::Protocol::IncomingPacket& pkt)
     }
 }
 
-std::unique_ptr<const Dummy::Server::Command::CreateCharacter>
+std::shared_ptr<const Dummy::Server::Command::CreateCharacter>
 ManageCharactersState::_createCharacter(Dummy::Protocol::IncomingPacket& pkt)
 {
     std::string name, skin;
@@ -51,7 +51,7 @@ ManageCharactersState::_createCharacter(Dummy::Protocol::IncomingPacket& pkt)
     );
 }
 
-std::unique_ptr<const Dummy::Server::Command::SelectCharacter>
+std::shared_ptr<const Dummy::Server::Command::SelectCharacter>
 ManageCharactersState::_selectCharacter(Dummy::Protocol::IncomingPacket& pkt)
 {
     std::string name;

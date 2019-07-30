@@ -4,7 +4,7 @@
 
 #include <dummy/protocol/incoming_packet.hpp>
 #include <dummy/protocol/outgoing_packet.hpp>
-#include <dummy/server/game_session.hpp>
+#include <dummy/server/game_session_communicator.hpp>
 #include <dummy/server/command/command.hpp>
 #include <dummy/server/response/response.hpp>
 
@@ -12,10 +12,14 @@
 #include "response_packet.hpp"
 #include "network_session.hpp"
 
+using GameSessionCommunicatorPtr =
+    std::shared_ptr<Dummy::Server::GameSessionCommunicator>;
+
 NetworkSession::NetworkSession(
     boost::asio::ip::tcp::socket s,
-    std::shared_ptr<Dummy::Server::GameSession> gameSession)
-    : m_socket(std::move(s)), m_gameSession(gameSession),
+    GameSessionCommunicatorPtr gameSessionCommunicator)
+    : m_socket(std::move(s)),
+      m_gameSessionCommunicator(gameSessionCommunicator),
       m_state(std::make_shared<NetworkSessionState::InitialState>(*this)),
       m_isRunning(false)
 {
@@ -29,8 +33,11 @@ NetworkSession::~NetworkSession() {
 void NetworkSession::close() {
     if (m_isRunning) {
         m_socket.close();
+        // XXX: Notify the game session somehow.
+        /*
         m_gameSession->close();
         m_gameSession.reset();
+        */
         m_state.reset();
         m_isRunning = false;
     }
@@ -38,6 +45,7 @@ void NetworkSession::close() {
 
 void NetworkSession::start()
 {
+    m_gameSessionCommunicator->setResponseHandler(shared_from_this());
     m_isRunning = true;
     _doReadHeader();
 }
@@ -57,7 +65,7 @@ void NetworkSession::_doReadHeader() {
                 m_payload.resize(m_header);
                 _doReadContent();
             } else {
-                std::cerr << "Error while reading size." << std::endl;
+                std::cerr << "Error while reading size: " << ec << std::endl;
                 close();
             }
         }
@@ -67,25 +75,31 @@ void NetworkSession::_doReadHeader() {
 void NetworkSession::_handlePacket(Dummy::Protocol::IncomingPacket& pkt) {
 
     // Convert the incoming packet into command
-    std::unique_ptr<const Dummy::Server::Command::Command> cmd =
-        m_state->getCommand(pkt);
+    auto cmd = m_state->getCommand(pkt);
 
     // Forward the command into the game session
-    m_gameSession->handleCommand(*cmd);
+    m_gameSessionCommunicator->forwardCommand(cmd);
 
+    /*
     // Immediatly get the response
     std::unique_ptr<const Dummy::Server::Response::Response> response =
         m_gameSession->getResponse();
 
     if (response != nullptr) {
         ResponsePacket packet;
-
         response->accept(packet);
-
         _sendPacket(packet);
-
-        m_state->visit(*response);
+        m_state->visit(*response)
     }
+    */
+    next();
+}
+
+void NetworkSession::handleResponse(ResponsePtr response) {
+    ResponsePacket packet;
+    response->accept(packet);
+    _sendPacket(packet);
+    m_state->visit(*response);
 }
 
 void NetworkSession::_doReadContent() {
@@ -124,7 +138,7 @@ void NetworkSession::_sendPacket(const Dummy::Protocol::OutgoingPacket& pkt) {
         boost::asio::buffer(pkt.buffer(), pkt.size()),
         [this, self](boost::system::error_code ec, std::size_t size) {
             if (!ec) {
-                next();
+                // XXX: perform reading again?
             }
         }
     );

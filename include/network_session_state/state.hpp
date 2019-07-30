@@ -42,7 +42,7 @@ public:
     State(::NetworkSession&);
 
     virtual
-    std::unique_ptr<const Dummy::Server::Command::Command>
+    std::shared_ptr<const Dummy::Server::Command::Command>
     getCommand(Dummy::Protocol::IncomingPacket&) = 0;
 
     virtual void visit(const Dummy::Server::Response::Response&) = 0;

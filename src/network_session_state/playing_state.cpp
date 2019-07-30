@@ -22,7 +22,7 @@ PlayingState::PlayingState(::NetworkSession& networkSession)
 {
 }
 
-std::unique_ptr<const Dummy::Server::Command::Command>
+std::shared_ptr<const Dummy::Server::Command::Command>
 PlayingState::getCommand(Dummy::Protocol::IncomingPacket& pkt) {
     std::uint16_t command;
     pkt >> command;
@@ -42,20 +42,20 @@ PlayingState::getCommand(Dummy::Protocol::IncomingPacket& pkt) {
     }
 }
 
-std::unique_ptr<const Dummy::Server::Command::Ping>
+std::shared_ptr<const Dummy::Server::Command::Ping>
 PlayingState::_ping(Dummy::Protocol::IncomingPacket& pkt) {
     // Nothing to extract from the packet (for now).
     return std::make_unique<Dummy::Server::Command::Ping>();
 }
 
-std::unique_ptr<const Dummy::Server::Command::SetPosition>
+std::shared_ptr<const Dummy::Server::Command::SetPosition>
 PlayingState::_setPosition(Dummy::Protocol::IncomingPacket& pkt) {
     std::uint16_t x, y;
     pkt >> x >> y;
     return std::make_unique<Dummy::Server::Command::SetPosition>(x, y);
 }
 
-std::unique_ptr<const Dummy::Server::Command::Message>
+std::shared_ptr<const Dummy::Server::Command::Message>
 PlayingState::message(Dummy::Protocol::IncomingPacket& pkt) {
     std::string content;
     pkt >> content;
@@ -76,6 +76,11 @@ void PlayingState::visitResponse(
     const Dummy::Server::Response::SetPosition& setPosition
 ) {
     // Nothing to do for now!
+}
+
+void PlayingState::visitResponse(const Dummy::Server::Response::Message&) {
+    // Nothing to do for now!
+
 }
 
 }

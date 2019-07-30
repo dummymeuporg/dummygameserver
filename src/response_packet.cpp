@@ -2,6 +2,7 @@
 #include <dummy/server/response/connect_response.hpp>
 #include <dummy/server/response/characters_list_response.hpp>
 #include <dummy/server/response/create_character.hpp>
+#include <dummy/server/response/message.hpp>
 #include <dummy/server/response/ping.hpp>
 #include <dummy/server/response/select_character.hpp>
 #include <dummy/server/response/set_position.hpp>
@@ -57,5 +58,12 @@ void ResponsePacket::visitResponse(
     const Dummy::Server::Response::SetPosition& response
 ) {
     *this << Dummy::Protocol::Bridge::SET_POSITION;
+    response.serializeTo(*this);
+}
+
+void ResponsePacket::visitResponse(
+    const Dummy::Server::Response::Message& response
+) {
+    *this << Dummy::Protocol::Bridge::MESSAGE;
     response.serializeTo(*this);
 }
