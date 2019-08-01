@@ -33,13 +33,9 @@ NetworkSession::~NetworkSession() {
 void NetworkSession::close() {
     if (m_isRunning) {
         m_socket.close();
-        // XXX: Notify the game session somehow.
-        /*
-        m_gameSession->close();
-        m_gameSession.reset();
-        */
         m_state.reset();
         m_isRunning = false;
+        m_gameSessionCommunicator->closeFromResponseHandler();
     }
 }
 
@@ -137,9 +133,14 @@ void NetworkSession::_sendPacket(const Dummy::Protocol::OutgoingPacket& pkt) {
         m_socket,
         boost::asio::buffer(pkt.buffer(), pkt.size()),
         [this, self](boost::system::error_code ec, std::size_t size) {
-            if (!ec) {
-                // XXX: perform reading again?
+            if (ec) {
+                std::cerr << "Error in NetworkSession: " << ec << std::endl;
+                close();
             }
         }
     );
+}
+
+void NetworkSession::commandHandlerClosed() {
+    close();
 }

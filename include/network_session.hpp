@@ -41,6 +41,7 @@ public:
 
     void changeState(std::shared_ptr<NetworkSessionState::State>);
     void handleResponse(ResponsePtr) override;
+    void commandHandlerClosed() override;
 
 private:
     boost::asio::ip::tcp::socket m_socket;
@@ -51,10 +52,10 @@ private:
 
     std::uint16_t m_header;
     std::vector<uint8_t> m_payload;
-    bool m_isRunning;
-
     std::shared_ptr<Dummy::Server::GameSessionCommunicator>
         m_gameSessionCommunicator;
 
     std::shared_ptr<NetworkSessionState::State> m_state;
+    bool m_isRunning;
+
 };
