@@ -37,9 +37,10 @@ LoadingState::_teleportMap(Dummy::Protocol::IncomingPacket& pkt)
 {
     std::string mapName, instance;
     std::uint16_t dstX, dstY;
-    pkt >> mapName >> dstX >> dstY >> instance;
+    std::uint8_t floor;
+    pkt >> mapName >> dstX >> dstY >> floor >> instance;
     return std::make_shared<Dummy::Server::Command::TeleportMap>(
-        mapName, dstX, dstY, instance
+        mapName, dstX, dstY, floor, instance
     );
 }
 

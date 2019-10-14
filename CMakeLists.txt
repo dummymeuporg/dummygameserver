@@ -36,6 +36,7 @@ GroupSources(src)
 set(CLIENT_LINK_LIBRARIES
     ${Boost_LIBRARIES}
     dummy
+    ${LUA_LIBRARY}
 )
 
 # On Linux, explicitly pass libraries.
