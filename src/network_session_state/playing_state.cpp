@@ -7,6 +7,7 @@
 #include <dummy/server/command/message.hpp>
 #include <dummy/server/command/ping.hpp>
 #include <dummy/server/command/set_position.hpp>
+#include <dummy/server/command/teleport_map.hpp>
 
 #include <dummy/server/response/ping.hpp>
 #include <dummy/server/response/set_position.hpp>
@@ -36,10 +37,26 @@ PlayingState::getCommand(Dummy::Protocol::IncomingPacket& pkt) {
     case Dummy::Protocol::Bridge::MESSAGE:
         return message(pkt);
         break;
+    case Dummy::Protocol::Bridge::PLAYING_TELEPORT_MAP:
+        return teleportMap(pkt);
+        break;
     default:
         throw UnknownCommandError();
         break;
     }
+}
+
+std::shared_ptr<const Dummy::Server::Command::TeleportMap>
+PlayingState::teleportMap(Dummy::Protocol::IncomingPacket& pkt) {
+    std::string mapName;
+    std::uint16_t x, y;
+    std::uint8_t floor;
+    std::string instance;
+
+    pkt >> mapName >> x >> y >> floor >> instance;
+    return std::make_unique<Dummy::Server::Command::TeleportMap>(
+        mapName, x, y, floor, instance
+    );
 }
 
 std::shared_ptr<const Dummy::Server::Command::Ping>
@@ -81,6 +98,10 @@ void PlayingState::visitResponse(
 void PlayingState::visitResponse(const Dummy::Server::Response::Message&) {
     // Nothing to do for now!
 
+}
+
+void PlayingState::visitResponse(const Dummy::Server::Response::TeleportMap&) {
+    // Nothing to do for now!
 }
 
 }

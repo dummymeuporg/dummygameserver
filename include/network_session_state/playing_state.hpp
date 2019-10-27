@@ -8,6 +8,7 @@ namespace Command {
 class Message;
 class Ping;
 class SetPosition;
+class TeleportMap;
 } // namespace Command
 
 namespace Response {
@@ -33,6 +34,7 @@ public:
     void visitResponse(const Dummy::Server::Response::Ping&) override;
     void visitResponse(const Dummy::Server::Response::SetPosition&) override;
     void visitResponse(const Dummy::Server::Response::Message&) override;
+    void visitResponse(const Dummy::Server::Response::TeleportMap&) override;
 private:
     std::shared_ptr<const Dummy::Server::Command::Ping>
     _ping(Dummy::Protocol::IncomingPacket&);
@@ -42,6 +44,9 @@ private:
 
     std::shared_ptr<const Dummy::Server::Command::Message>
     message(Dummy::Protocol::IncomingPacket&);
+
+    std::shared_ptr<const Dummy::Server::Command::TeleportMap>
+    teleportMap(Dummy::Protocol::IncomingPacket&);
 };
 
 }
